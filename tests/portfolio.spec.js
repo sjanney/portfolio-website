@@ -38,7 +38,7 @@ test.describe('Portfolio Website Tests', () => {
     // First image shouldn't be lazy
     const firstImage = page.locator('.work-content img').first();
     await expect(firstImage).not.toHaveAttribute('loading', 'lazy');
-    await expect(firstImage).toHaveAttribute('src', /.*\.webp/);
+    await expect(firstImage).toHaveAttribute('src', /.*\.jpeg/);
     
     // Second image should be lazy loaded
     const secondImage = page.locator('.work-content img').nth(1);

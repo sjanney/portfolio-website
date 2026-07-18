@@ -4,7 +4,7 @@
   "description": "A beautiful, responsive, gallery-style portfolio website showcasing creative work.",
   "main": "grainient.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test"
   },
   "repository": {
     "type": "git",
