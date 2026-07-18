@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,40 +8,30 @@
     <title>Shane Janney — Work</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="loading">
     <!-- Loader overlay -->
     <div class="loader" id="loader"></div>
     <div class="cursor-glow" id="cursorGlow"></div>
 
     <!-- Navigation -->
-    <nav class="nav">
-        <a href="index.html" class="nav-link">bio</a>
-        <a href="work.html" class="nav-link">work</a>
-        <a href="#" class="nav-link">contact</a>
-        <a href="#" class="nav-link">projects</a>
-        <a href="#" class="nav-link">dev work</a>
+    <nav class="nav" id="nav">
+        <a href="index.html" class="nav-link" data-index="0">bio</a>
+        <a href="work.html" class="nav-link" data-index="1">work</a>
+        <a href="#" class="nav-link" data-index="2">contact</a>
+        <a href="#" class="nav-link" data-index="3">projects</a>
+        <a href="#" class="nav-link" data-index="4">dev work</a>
     </nav>
 
     <!-- Meta info (Time/Location) -->
-    <div class="meta top-right" id="metaInfo">
-        <div class="meta-time" id="localTime">--:-- --</div>
-        <div class="meta-location" id="userLocation">Loading...</div>
+    <div class="meta-info" id="metaInfo">
+        <div class="meta-time" id="metaTime">--:-- --</div>
+        <div class="meta-location" id="metaLocation">locating...</div>
     </div>
 
     <!-- Scroll Snapping Container -->
     <main class="scroll-container">
         <!-- Section 1 -->
-        <section class="work-section">
-            <div class="work-content">
-                <img src="assets/images/DSCF3038.jpeg" alt="slawn on w14th street art gallery opening">
-                <div class="work-caption">
-                    <span class="caption-date">07/16/26</span>
-                    <span class="caption-text">slawn on w14th street art gallery opening</span>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Section 2 -->
         <section class="work-section">
             <div class="work-content">
                 <img src="assets/images/IMG_1151.jpeg" alt="beardown festival - redveil performance">
@@ -50,18 +41,29 @@
                 </div>
             </div>
         </section>
-        
+
+        <!-- Section 2 -->
+        <section class="work-section">
+            <div class="work-content">
+                <img src="assets/images/DSCF3038.jpeg" alt="slawn on w14th street art gallery opening">
+                <div class="work-caption">
+                    <span class="caption-date">07/16/26</span>
+                    <span class="caption-text">slawn on w14th street art gallery opening</span>
+                </div>
+            </div>
+        </section>
+
         <!-- Section 3 -->
         <section class="work-section">
             <div class="work-content">
                 <img src="assets/images/IMG_4769.jpeg" alt="beardown festival - redveil performance">
                 <div class="work-caption">
                     <span class="caption-date">07/21/24</span>
-                    <span class="caption-text">beardown festival - redveil performance</span>
+                    <span class="caption-text">beardown festival - kaytranada performance</span>
                 </div>
             </div>
         </section>
-        
+
         <!-- Section 4 -->
         <section class="work-section">
             <div class="work-content">
@@ -76,4 +78,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
