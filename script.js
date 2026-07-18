@@ -179,7 +179,7 @@
     // ========================================
     const heroImage = document.getElementById('heroImage');
 
-    if (heroContainer && heroImage) {
+    if (document.getElementById('heroImageContainer') && heroImage) {
         document.addEventListener('mousemove', (e) => {
             const xPercent = (e.clientX / window.innerWidth - 0.5) * 2;
             const yPercent = (e.clientY / window.innerHeight - 0.5) * 2;
