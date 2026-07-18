@@ -27,27 +27,34 @@
 
         // Meta info (time/location)
         const metaInfo = document.getElementById('metaInfo');
-        setTimeout(() => {
-            metaInfo.classList.add('visible');
-        }, 200);
+        if (metaInfo) {
+            setTimeout(() => {
+                metaInfo.classList.add('visible');
+            }, 200);
+        }
 
-        // Hero image
+        // Reveal name, container, and caption if they exist
+        const heroName = document.querySelector('.name-line');
         const heroContainer = document.getElementById('heroImageContainer');
-        setTimeout(() => {
-            heroContainer.classList.add('visible');
-        }, 100);
+        const heroCaption = document.getElementById('heroCaption');
 
-        // Name
-        const nameLine = document.querySelector('.name-line');
-        setTimeout(() => {
-            nameLine.classList.add('visible');
-        }, 500);
+        if (heroName) {
+            setTimeout(() => {
+                heroName.classList.add('visible');
+            }, 500);
+        }
 
-        // Caption
-        const caption = document.getElementById('heroCaption');
-        setTimeout(() => {
-            caption.classList.add('visible');
-        }, 800);
+        if (heroContainer) {
+            setTimeout(() => {
+                heroContainer.classList.add('visible');
+            }, 100);
+        }
+
+        if (heroCaption) {
+            setTimeout(() => {
+                heroCaption.classList.add('visible');
+            }, 800);
+        }
     }
 
     // ========================================
@@ -170,17 +177,19 @@
     // ========================================
     // SUBTLE PARALLAX ON IMAGE
     // ========================================
-    const heroContainer = document.getElementById('heroImageContainer');
+    const heroImage = document.getElementById('heroImage');
 
-    document.addEventListener('mousemove', (e) => {
-        const xPercent = (e.clientX / window.innerWidth - 0.5) * 2;
-        const yPercent = (e.clientY / window.innerHeight - 0.5) * 2;
+    if (heroContainer && heroImage) {
+        document.addEventListener('mousemove', (e) => {
+            const xPercent = (e.clientX / window.innerWidth - 0.5) * 2;
+            const yPercent = (e.clientY / window.innerHeight - 0.5) * 2;
 
-        requestAnimationFrame(() => {
-            // Scale up slightly (1.05) and use percentage translation to ensure edges never show
-            heroImage.style.transform = `scale(1.05) translate(${xPercent * -1.5}%, ${yPercent * -1.5}%)`;
+            requestAnimationFrame(() => {
+                // Scale up slightly (1.05) and use percentage translation to ensure edges never show
+                heroImage.style.transform = `scale(1.05) translate(${xPercent * -1.5}%, ${yPercent * -1.5}%)`;
+            });
         });
-    });
+    }
 
     // Start entrance animations immediately
     runEntranceAnimations();

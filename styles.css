@@ -309,3 +309,70 @@ a {
         font-size: 0.6rem;
     }
 }
+
+/* ========================================
+   WORK PAGE SCROLL SNAPPING
+   ======================================== */
+.scroll-container {
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.work-section {
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    padding: var(--page-padding);
+    position: relative;
+}
+
+.work-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    margin-top: 4rem; /* Clear header */
+    gap: 2rem;
+}
+
+.work-content img {
+    width: 75%;
+    max-height: 80vh;
+    object-fit: contain;
+    object-position: left bottom;
+}
+
+.work-caption {
+    width: 25%;
+    margin-bottom: 2rem; /* Offset from bottom of image */
+}
+
+@media (max-width: 768px) {
+    .work-content {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 5rem;
+    }
+    
+    .work-content img {
+        width: 100%;
+        max-height: 65vh;
+        object-position: left center;
+    }
+    
+    .work-caption {
+        width: 100%;
+        margin-bottom: 0;
+    }
+}
