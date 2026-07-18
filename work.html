@@ -75,9 +75,29 @@
                 </div>
             </div>
         </section>
+        <!-- Footer Section -->
+        <section class="work-section footer-section">
+            <div id="footerGrainient" class="grainient-container"></div>
+            <div class="footer-content">
+                <a href="mailto:contact@shanejanney.com" class="footer-link">contact@shanejanney.com</a>
+                <a href="https://instagram.com/shanejanney" class="footer-link" target="_blank">@shanejanney</a>
+            </div>
+        </section>
     </main>
 
     <script src="script.js"></script>
+    <script type="module">
+        import { Grainient } from './grainient.js';
+        
+        const footerBg = document.getElementById('footerGrainient');
+        if (footerBg) {
+            new Grainient(footerBg, {
+                color1: '#FF9FFC',
+                color2: '#5227FF',
+                color3: '#B497CF'
+            });
+        }
+    </script>
 </body>
 
 </html>
