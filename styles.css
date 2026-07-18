@@ -386,6 +386,8 @@ a {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    height: 40vh;
+    scroll-snap-align: end;
 }
 
 .grainient-container {
