@@ -386,9 +386,9 @@ a {
     align-items: flex-end;
     justify-content: flex-end;
     overflow: hidden;
-    height: 40vh;
+    height: max-content;
     scroll-snap-align: end;
-    padding: var(--page-padding);
+    padding: 3rem var(--page-padding) var(--page-padding) var(--page-padding);
 }
 
 .grainient-container {
