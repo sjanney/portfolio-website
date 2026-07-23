@@ -464,29 +464,18 @@ a {
     .work-content {
         flex-direction: column;
         align-items: flex-start;
-        margin-top: 0;
+        margin-top: 5rem;
     }
     
     .work-content img {
         width: 100%;
-        max-height: 75vh;
+        max-height: 65vh;
         object-position: left center;
     }
     
     .work-caption {
-        position: absolute;
-        top: 42%;
-        left: var(--page-padding);
-        right: var(--page-padding);
-        width: auto;
+        width: 100%;
         margin-bottom: 0;
-        background: rgba(253, 251, 247, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        padding: 1rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        z-index: 10;
     }
 }
 
