@@ -65,8 +65,10 @@ a {
     left: calc(env(safe-area-inset-left, 0px) + var(--page-padding));
     z-index: 20;
     display: flex;
+    flex-wrap: wrap;
     gap: var(--nav-gap);
     align-items: center;
+    max-width: calc(100vw - 2 * var(--page-padding));
 }
 
 .nav-link {
@@ -252,6 +254,85 @@ a {
 
 .cursor-glow.active {
     opacity: 1;
+}
+
+/* ========================================
+   PERMISSION POPUP
+   ======================================== */
+.permission-popup {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--transition-smooth), transform 0.4s var(--transition-smooth);
+    width: 90%;
+    max-width: 400px;
+}
+
+.permission-popup.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.permission-content h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.permission-content p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+}
+
+.permission-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.permission-actions button {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn-deny {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.btn-deny:hover {
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-allow {
+    background: var(--text-primary);
+    color: #fff;
+}
+
+.btn-allow:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 /* ========================================
@@ -573,6 +654,13 @@ a {
     max-width: 1100px;
     align-items: center;
     margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
 }
 
 .contact-form-wrapper {

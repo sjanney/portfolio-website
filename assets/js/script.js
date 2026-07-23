@@ -142,7 +142,9 @@
         }
     }
 
-    fetchLocation();
+    }
+
+    // fetchLocation(); // Deferred to custom popup logic
 
     // ========================================
     // CURSOR GLOW EFFECT
@@ -220,20 +222,22 @@
     const cardWebcam = document.getElementById('cardWebcam');
 
     if (reflectiveCard) {
-        // 1. Webcam Stream Initialization
-        if (cardWebcam && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 640 },
-                    height: { ideal: 480 },
-                    facingMode: 'user'
-                }
-            }).then(stream => {
-                cardWebcam.srcObject = stream;
-            }).catch(err => {
-                console.log('Webcam stream unavailable for reflective card fallback active:', err);
-            });
-        }
+        // 1. Webcam Stream Initialization (Deferred)
+        window.initCamera = function() {
+            if (cardWebcam && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user'
+                    }
+                }).then(stream => {
+                    cardWebcam.srcObject = stream;
+                }).catch(err => {
+                    console.log('Webcam stream unavailable for reflective card fallback active:', err);
+                });
+            }
+        };
 
         // 2. Interactive 3D Card Tilt Effect (subtle)
         reflectiveCard.addEventListener('mousemove', (e) => {
@@ -356,6 +360,67 @@
             });
         }
     }
+
+    // ========================================
+    // CUSTOM PERMISSIONS POPUP
+    // ========================================
+    function initPermissions() {
+        const hasPrompted = localStorage.getItem('permissionsPrompted');
+        
+        if (hasPrompted === 'true') {
+            // Already allowed
+            fetchLocation();
+            if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
+                window.initCamera();
+            }
+        } else if (hasPrompted === 'false') {
+            // Previously denied via custom popup, just use fallback
+            fallbackLocation();
+        } else {
+            // Has not been prompted yet, use fallback initially
+            fallbackLocation();
+            
+            // Show custom popup after a short delay
+            setTimeout(() => {
+                const popup = document.createElement('div');
+                popup.className = 'permission-popup';
+                popup.innerHTML = `
+                    <div class="permission-content">
+                        <h3>Enhance your experience</h3>
+                        <p>Allow access to location and camera for interactive features and accurate local time?</p>
+                        <div class="permission-actions">
+                            <button class="btn-deny" id="btnDenyPerm">Not Now</button>
+                            <button class="btn-allow" id="btnAllowPerm">Allow</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(popup);
+                
+                // Trigger reflow
+                void popup.offsetWidth;
+                popup.classList.add('show');
+                
+                document.getElementById('btnDenyPerm').addEventListener('click', () => {
+                    localStorage.setItem('permissionsPrompted', 'false');
+                    popup.classList.remove('show');
+                    setTimeout(() => popup.remove(), 400);
+                });
+                
+                document.getElementById('btnAllowPerm').addEventListener('click', () => {
+                    localStorage.setItem('permissionsPrompted', 'true');
+                    popup.classList.remove('show');
+                    setTimeout(() => popup.remove(), 400);
+                    
+                    fetchLocation();
+                    if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
+                        window.initCamera();
+                    }
+                });
+            }, 1500);
+        }
+    }
+
+    initPermissions();
 
     // Start entrance animations immediately
     runEntranceAnimations();
