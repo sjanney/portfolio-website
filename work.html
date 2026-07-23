@@ -3,8 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Shane Janney — Selected Work">
+    <meta name="author" content="Shane Janney">
+    <meta name="theme-color" content="#FDFBF7">
+    <meta property="og:title" content="Shane Janney — Work">
+    <meta property="og:description" content="Selected creative work by Shane Janney.">
+    <meta property="og:type" content="website">
     <title>Shane Janney — Work</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preload" href="assets/images/IMG_1151.jpeg" as="image">
@@ -18,11 +23,11 @@
     <!-- Navigation -->
     <nav class="nav" id="nav">
         <a href="index.html" class="nav-link" data-index="0">home</a>
-        <a href="index.html" class="nav-link" data-index="1">bio</a>
+        <a href="construction.html" class="nav-link" data-index="1">bio</a>
         <a href="work.html" class="nav-link" data-index="2">work</a>
-        <a href="#" class="nav-link" data-index="3">contact</a>
-        <a href="#" class="nav-link" data-index="4">projects</a>
-        <a href="#" class="nav-link" data-index="5">dev work</a>
+        <a href="contact.html" class="nav-link" data-index="3">contact</a>
+        <a href="construction.html" class="nav-link" data-index="4">projects</a>
+        <a href="dev-work.html" class="nav-link" data-index="5">dev work</a>
     </nav>
 
     <!-- Meta info (Time/Location) -->
@@ -35,46 +40,47 @@
     <main class="scroll-container">
         <!-- Section 1 -->
         <section class="work-section">
-            <div class="work-content">
-                <img src="assets/images/IMG_1151.jpeg" alt="beardown festival - redveil performance">
+            <a href="work-detail.html?id=0" class="work-content work-link">
+                <img src="assets/images/IMG_1151.jpeg" alt="slawn on w14th street art gallery opening">
                 <div class="work-caption">
                     <span class="caption-date">04/17/24</span>
-                    <span class="caption-text">beardown festival - redveil performance</span>
+                    <span class="caption-text">slawn on w14th street art gallery opening</span>
                 </div>
-            </div>
+            </a>
         </section>
 
         <!-- Section 2 -->
         <section class="work-section">
-            <div class="work-content">
-                <img src="assets/images/DSCF3038.jpeg" alt="slawn on w14th street art gallery opening" loading="lazy">
+            <a href="work-detail.html?id=1" class="work-content work-link">
+                <img src="assets/images/DSCF3038.jpeg" alt="beardown festival - redveil performance" loading="lazy">
                 <div class="work-caption">
                     <span class="caption-date">07/16/26</span>
-                    <span class="caption-text">slawn on w14th street art gallery opening</span>
+                    <span class="caption-text">beardown festival - redveil performance</span>
                 </div>
-            </div>
+            </a>
         </section>
 
         <!-- Section 3 -->
         <section class="work-section">
-            <div class="work-content">
-                <img src="assets/images/IMG_4769.jpeg" alt="beardown festival - kaytranada performance" loading="lazy">
+            <a href="work-detail.html?id=2" class="work-content work-link">
+                <img src="assets/images/IMG_4769.jpeg" alt="captiol block party - kaytranada performance"
+                    loading="lazy">
                 <div class="work-caption">
                     <span class="caption-date">07/21/24</span>
-                    <span class="caption-text">beardown festival - kaytranada performance</span>
+                    <span class="caption-text">captiol block party - kaytranada performance</span>
                 </div>
-            </div>
+            </a>
         </section>
 
         <!-- Section 4 -->
         <section class="work-section">
-            <div class="work-content">
-                <img src="assets/images/DJ_Set.jpeg" alt="DJ set at brick warehouse" loading="lazy">
+            <a href="work-detail.html?id=3" class="work-content work-link">
+                <img src="assets/images/DJ_Set.jpeg" alt="mschf king solomon's baby event" loading="lazy">
                 <div class="work-caption">
                     <span class="caption-date">07/10/25</span>
                     <span class="caption-text">mschf king solomon's baby event</span>
                 </div>
-            </div>
+            </a>
         </section>
         <!-- Footer Section -->
         <section class="footer-section">
@@ -89,7 +95,7 @@
     <script src="script.js" defer></script>
     <script type="module">
         import { Grainient } from './grainient.js';
-        
+
         const footerBg = document.getElementById('footerGrainient');
         if (footerBg) {
             new Grainient(footerBg, {

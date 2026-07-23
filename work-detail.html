@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Shane Janney — Work Detail">
+    <title>Shane Janney — Work Detail</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Cursor glow overlay -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <a href="index.html" class="nav-link" data-index="0">home</a>
+        <a href="construction.html" class="nav-link" data-index="1">bio</a>
+        <a href="work.html" class="nav-link" data-index="2">work</a>
+        <a href="contact.html" class="nav-link" data-index="3">contact</a>
+        <a href="construction.html" class="nav-link" data-index="4">projects</a>
+        <a href="dev-work.html" class="nav-link" data-index="5">dev work</a>
+    </nav>
+
+    <!-- Meta info (Time/Location) -->
+    <div class="meta-info" id="metaInfo">
+        <div class="meta-time" id="metaTime">--:-- --</div>
+        <div class="meta-location" id="metaLocation">locating...</div>
+    </div>
+
+    <!-- Main Detail Section -->
+    <main class="detail-container">
+        <div class="detail-content">
+            <span class="detail-date" id="detailDate"></span>
+            <h1 class="detail-title" id="detailTitle"></h1>
+            <span class="detail-status">page under construction</span>
+            <a href="work.html" class="detail-back-link" onclick="if(history.length > 1){history.back(); return false;}">← back to work</a>
+        </div>
+
+        <div class="detail-gif-wrapper">
+            <img src="assets/images/via GIPHY-mkaYkiNW.gif" alt="Animation" class="detail-gif">
+        </div>
+    </main>
+
+    <script src="script.js" defer></script>
+    <script>
+        const workItems = [
+            {
+                date: '04/17/24',
+                title: 'slawn on w14th street art gallery opening'
+            },
+            {
+                date: '07/16/26',
+                title: 'beardown festival - redveil performance'
+            },
+            {
+                date: '07/21/24',
+                title: 'captiol block party - kaytranada performance'
+            },
+            {
+                date: '07/10/25',
+                title: 'mschf king solomon\'s baby event'
+            }
+        ];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const idParam = parseInt(urlParams.get('id'), 10);
+        const item = (!isNaN(idParam) && workItems[idParam]) ? workItems[idParam] : workItems[0];
+
+        document.getElementById('detailDate').textContent = item.date;
+        document.getElementById('detailTitle').textContent = item.title;
+        document.title = `Shane Janney — ${item.title}`;
+    </script>
+</body>
+
+</html>

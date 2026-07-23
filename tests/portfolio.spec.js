@@ -61,4 +61,62 @@ test.describe('Portfolio Website Tests', () => {
     await expect(instagram).toHaveAttribute('href', 'https://instagram.com/shanejanney');
   });
 
+  test('Clicking a work section opens work detail page with centered text, under construction status, and GIF', async ({ page }) => {
+    await page.goto('/work.html');
+    
+    // Click on the first work link
+    await page.locator('.work-link').first().click();
+    
+    // Verify URL navigation to work-detail.html
+    await expect(page).toHaveURL(/.*work-detail\.html\?id=0/);
+    
+    // Check title text is centered and visible
+    const detailTitle = page.locator('#detailTitle');
+    await expect(detailTitle).toBeVisible();
+    await expect(detailTitle).toHaveText('slawn on w14th street art gallery opening');
+
+    // Check 'page under construction' notice
+    const status = page.locator('.detail-status');
+    await expect(status).toBeVisible();
+    await expect(status).toHaveText('page under construction');
+    
+    // Check GIF exists and is visible at bottom
+    const gif = page.locator('.detail-gif');
+    await expect(gif).toBeVisible();
+    await expect(gif).toHaveAttribute('src', /.*via GIPHY-mkaYkiNW\.gif/);
+
+    // Check back link exists
+    const backLink = page.locator('.detail-back-link');
+    await expect(backLink).toBeVisible();
+    await expect(backLink).toHaveText('← back to work');
+  });
+
+  test('Contact page navigation and ReflectiveCard live text sync works', async ({ page }) => {
+    await page.goto('/contact.html');
+
+    // Check contact title
+    const title = page.locator('.contact-title');
+    await expect(title).toBeVisible();
+    await expect(title).toHaveText('get in touch');
+
+    // Check initial default text on ReflectiveCard
+    const cardName = page.locator('#cardName');
+    const cardEmail = page.locator('#cardEmail');
+    const cardSubject = page.locator('#cardSubject');
+
+    await expect(cardName).toHaveText('YOUR NAME');
+    await expect(cardEmail).toHaveText('YOUR@EMAIL.COM');
+    await expect(cardSubject).toHaveText('PROJECT INQUIRY');
+
+    // Type into form fields and verify live text sync onto card
+    await page.fill('#contactName', 'Alex Doe');
+    await expect(cardName).toHaveText('ALEX DOE');
+
+    await page.fill('#contactEmail', 'alex@example.com');
+    await expect(cardEmail).toHaveText('ALEX@EXAMPLE.COM');
+
+    await page.fill('#contactSubject', 'Custom Design Work');
+    await expect(cardSubject).toHaveText('CUSTOM DESIGN WORK');
+  });
+
 });
