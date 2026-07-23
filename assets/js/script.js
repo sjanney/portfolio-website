@@ -80,6 +80,12 @@
     const metaLocationEl = document.getElementById('metaLocation');
 
     async function fetchLocation() {
+        const cachedLocation = sessionStorage.getItem('userLocation');
+        if (cachedLocation) {
+            metaLocationEl.textContent = cachedLocation;
+            return;
+        }
+
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -97,9 +103,12 @@
                         }
                         
                         if (city && regionShort) {
-                            metaLocationEl.textContent = `${city}, ${regionShort}`;
+                            const locStr = `${city}, ${regionShort}`;
+                            metaLocationEl.textContent = locStr;
+                            sessionStorage.setItem('userLocation', locStr);
                         } else if (city) {
                             metaLocationEl.textContent = city;
+                            sessionStorage.setItem('userLocation', city);
                         } else {
                             fallbackLocation();
                         }
@@ -118,6 +127,12 @@
     }
 
     async function fallbackLocation() {
+        const cachedLocation = sessionStorage.getItem('userLocation');
+        if (cachedLocation) {
+            metaLocationEl.textContent = cachedLocation;
+            return;
+        }
+
         try {
             const response = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client');
             const data = await response.json();
@@ -128,9 +143,12 @@
                 regionShort = region.split('-').pop();
             }
             if (city && regionShort) {
-                metaLocationEl.textContent = `${city}, ${regionShort}`;
+                const locStr = `${city}, ${regionShort}`;
+                metaLocationEl.textContent = locStr;
+                sessionStorage.setItem('userLocation', locStr);
             } else if (city) {
                 metaLocationEl.textContent = city;
+                sessionStorage.setItem('userLocation', city);
             } else {
                 metaLocationEl.textContent = 'location hidden';
             }
@@ -360,11 +378,12 @@
     // ========================================
     function initPermissions() {
         const hasPrompted = localStorage.getItem('permissionsPrompted');
+        const isMobile = window.innerWidth <= 768;
         
         if (hasPrompted === 'true') {
             // Already allowed
             fetchLocation();
-            if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
+            if (!isMobile && document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
                 window.initCamera();
             }
         } else if (hasPrompted === 'false') {
@@ -378,10 +397,14 @@
             setTimeout(() => {
                 const popup = document.createElement('div');
                 popup.className = 'permission-popup';
+                const popupText = isMobile 
+                    ? "Allow access to location for precise local time?" 
+                    : "Allow access to location and camera for interactive features and precise local time?";
+                    
                 popup.innerHTML = `
                     <div class="permission-content">
                         <h3>Enhance your experience</h3>
-                        <p>Allow access to location and camera for interactive features and precise local time?</p>
+                        <p>${popupText}</p>
                         <div class="permission-actions">
                             <button class="btn-deny" id="btnDenyPerm">Not Now</button>
                             <button class="btn-allow" id="btnAllowPerm">Allow</button>
@@ -406,7 +429,7 @@
                     setTimeout(() => popup.remove(), 400);
                     
                     fetchLocation();
-                    if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
+                    if (!isMobile && document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
                         window.initCamera();
                     }
                 });
