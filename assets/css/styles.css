@@ -370,6 +370,21 @@ a {
     .caption-text {
         font-size: 0.65rem;
     }
+
+    body:not(.home-page)::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 15;
+        background: linear-gradient(
+            to bottom,
+            var(--bg) 0%,
+            transparent 12%,
+            transparent 88%,
+            var(--bg) 100%
+        );
+    }
 }
 
 @media (max-width: 480px) {
