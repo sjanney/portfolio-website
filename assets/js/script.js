@@ -86,53 +86,6 @@
             return;
         }
 
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    try {
-                        const response = await fetch(
-                            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-                        );
-                        const data = await response.json();
-                        const city = data.city || data.locality || data.principalSubdivision || '';
-                        const region = data.principalSubdivisionCode || data.principalSubdivision || '';
-                        let regionShort = region;
-                        if (region.includes('-')) {
-                            regionShort = region.split('-').pop();
-                        }
-                        
-                        if (city && regionShort) {
-                            const locStr = `${city}, ${regionShort}`;
-                            metaLocationEl.textContent = locStr;
-                            sessionStorage.setItem('userLocation', locStr);
-                        } else if (city) {
-                            metaLocationEl.textContent = city;
-                            sessionStorage.setItem('userLocation', city);
-                        } else {
-                            fallbackLocation();
-                        }
-                    } catch (err) {
-                        fallbackLocation();
-                    }
-                },
-                () => {
-                    fallbackLocation();
-                },
-                { timeout: 8000, maximumAge: 300000 }
-            );
-        } else {
-            fallbackLocation();
-        }
-    }
-
-    async function fallbackLocation() {
-        const cachedLocation = sessionStorage.getItem('userLocation');
-        if (cachedLocation) {
-            metaLocationEl.textContent = cachedLocation;
-            return;
-        }
-
         try {
             const response = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client');
             const data = await response.json();
@@ -156,6 +109,9 @@
             metaLocationEl.textContent = 'location hidden';
         }
     }
+    
+    // Call immediately since IP location doesn't trigger browser prompts
+    fetchLocation();
     // fetchLocation(); // Deferred to custom popup logic
 
     // ========================================
@@ -382,17 +338,12 @@
         
         if (hasPrompted === 'true') {
             // Already allowed
-            fetchLocation();
             if (!isMobile && document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
                 window.initCamera();
             }
         } else if (hasPrompted === 'false') {
-            // Previously denied via custom popup, use IP fallback
-            fallbackLocation();
+            // Previously denied via custom popup, do nothing
         } else {
-            // Initial load, use fallback quietly while waiting
-            fallbackLocation();
-            
             // Show custom popup after a short delay
             setTimeout(() => {
                 const popup = document.createElement('div');
@@ -428,7 +379,6 @@
                     popup.classList.remove('show');
                     setTimeout(() => popup.remove(), 400);
                     
-                    fetchLocation();
                     if (!isMobile && document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
                         window.initCamera();
                     }
