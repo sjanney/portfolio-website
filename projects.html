@@ -309,18 +309,40 @@
           />
         ));
 
+        const FolderWrapper = ({ items }) => {
+          const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+          useEffect(() => {
+            const handleResize = () => setIsMobile(window.innerWidth <= 768);
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+          }, []);
+
+          return (
+            <div className="folder-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: isMobile ? '250px' : '400px' }}>
+              <Folder 
+                color="#5227FF"
+                size={isMobile ? 1.5 : 2} 
+                items={items} 
+              />
+              <p style={{ 
+                marginTop: isMobile ? '1.5rem' : '2.5rem', 
+                color: 'var(--text-secondary)', 
+                fontSize: '0.85rem', 
+                letterSpacing: '0.05em',
+                opacity: 0.6,
+                pointerEvents: 'none'
+              }}>
+                click me!
+              </p>
+            </div>
+          );
+        };
+
         const rootElement = document.getElementById('music-app-stack');
         if (rootElement) {
           const root = createRoot(rootElement);
-          root.render(
-            <div className="folder-container">
-              <Folder 
-                color="#5227FF"
-                size={2} 
-                items={cards} 
-              />
-            </div>
-          );
+          root.render(<FolderWrapper items={cards} />);
         }
     </script>
 </body>
