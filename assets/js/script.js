@@ -97,7 +97,7 @@
             metaLocationEl.textContent = 'location hidden';
         }
     }
-    // fetchLocation(); // Deferred to custom popup logic
+    fetchLocation(); // IP-based, no prompt
 
     // ========================================
     // CURSOR GLOW EFFECT
@@ -322,17 +322,12 @@
         
         if (hasPrompted === 'true') {
             // Already allowed
-            fetchLocation();
             if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
                 window.initCamera();
             }
         } else if (hasPrompted === 'false') {
-            // Previously denied via custom popup, just use fallback
-            fallbackLocation();
+            // Previously denied via custom popup, do nothing
         } else {
-            // Has not been prompted yet, use fallback initially
-            fallbackLocation();
-            
             // Show custom popup after a short delay
             setTimeout(() => {
                 const popup = document.createElement('div');
@@ -340,7 +335,7 @@
                 popup.innerHTML = `
                     <div class="permission-content">
                         <h3>Enhance your experience</h3>
-                        <p>Allow access to location and camera for interactive features and accurate local time?</p>
+                        <p>Allow access to your camera for the interactive reflective ID card?</p>
                         <div class="permission-actions">
                             <button class="btn-deny" id="btnDenyPerm">Not Now</button>
                             <button class="btn-allow" id="btnAllowPerm">Allow</button>
