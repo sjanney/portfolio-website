@@ -112,6 +112,44 @@
     
     // Call immediately since IP location doesn't trigger browser prompts
     fetchLocation();
+
+    // Only called on desktop if user clicks Allow in the custom popup
+    async function fetchPreciseLocation() {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    try {
+                        const response = await fetch(
+                            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+                        );
+                        const data = await response.json();
+                        const city = data.city || data.locality || data.principalSubdivision || '';
+                        const region = data.principalSubdivisionCode || data.principalSubdivision || '';
+                        let regionShort = region;
+                        if (region.includes('-')) {
+                            regionShort = region.split('-').pop();
+                        }
+                        
+                        if (city && regionShort) {
+                            const locStr = `${city}, ${regionShort}`;
+                            metaLocationEl.textContent = locStr;
+                            sessionStorage.setItem('userLocation', locStr);
+                        } else if (city) {
+                            metaLocationEl.textContent = city;
+                            sessionStorage.setItem('userLocation', city);
+                        }
+                    } catch (err) {
+                        // Keep IP location if precise fails
+                    }
+                },
+                () => {
+                    // Keep IP location if denied or failed
+                },
+                { timeout: 8000, maximumAge: 300000 }
+            );
+        }
+    }
     // fetchLocation(); // Deferred to custom popup logic
 
     // ========================================
@@ -338,8 +376,11 @@
         
         if (hasPrompted === 'true') {
             // Already allowed
-            if (!isMobile && document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
-                window.initCamera();
+            if (!isMobile) {
+                fetchPreciseLocation();
+                if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
+                    window.initCamera();
+                }
             }
         } else if (hasPrompted === 'false') {
             // Previously denied via custom popup, do nothing
@@ -379,8 +420,11 @@
                     popup.classList.remove('show');
                     setTimeout(() => popup.remove(), 400);
                     
-                    if (!isMobile && document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
-                        window.initCamera();
+                    if (!isMobile) {
+                        fetchPreciseLocation();
+                        if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
+                            window.initCamera();
+                        }
                     }
                 });
             }, 1500);
