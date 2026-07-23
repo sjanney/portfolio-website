@@ -358,11 +358,12 @@ a {
     }
 
     .hero-caption {
-        top: 45%;
+        top: 38%;
         bottom: auto;
         left: calc(env(safe-area-inset-left, 0px) + var(--page-padding));
         right: auto;
         text-align: left;
+        z-index: 30;
     }
 
     .caption-date,
