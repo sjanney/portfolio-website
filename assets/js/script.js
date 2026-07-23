@@ -80,51 +80,7 @@
     const metaLocationEl = document.getElementById('metaLocation');
 
     async function fetchLocation() {
-        // First, try the browser Geolocation API for coordinates,
-        // then reverse-geocode to get city/state.
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { latitude, longitude } = position.coords;
-                    try {
-                        // Use free reverse geocoding API
-                        const response = await fetch(
-                            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-                        );
-                        const data = await response.json();
-                        const city = data.city || data.locality || data.principalSubdivision || '';
-                        const region = data.principalSubdivisionCode || data.principalSubdivision || '';
-                        
-                        // Format as "City, ST"
-                        let regionShort = region;
-                        if (region.includes('-')) {
-                            regionShort = region.split('-').pop();
-                        }
-                        
-                        if (city && regionShort) {
-                            metaLocationEl.textContent = `${city}, ${regionShort}`;
-                        } else if (city) {
-                            metaLocationEl.textContent = city;
-                        } else {
-                            fallbackLocation();
-                        }
-                    } catch (err) {
-                        fallbackLocation();
-                    }
-                },
-                () => {
-                    // Permission denied or error
-                    fallbackLocation();
-                },
-                { timeout: 8000, maximumAge: 300000 }
-            );
-        } else {
-            fallbackLocation();
-        }
-    }
-
-    async function fallbackLocation() {
-        // Fallback: IP-based geolocation
+        // IP-based geolocation (no browser permissions required)
         try {
             const response = await fetch('https://ipapi.co/json/');
             const data = await response.json();
@@ -135,10 +91,10 @@
             } else if (city) {
                 metaLocationEl.textContent = city;
             } else {
-                metaLocationEl.textContent = '';
+                metaLocationEl.textContent = 'location hidden';
             }
         } catch {
-            metaLocationEl.textContent = '';
+            metaLocationEl.textContent = 'location hidden';
         }
     }
 
