@@ -29,7 +29,7 @@
         }
         .dev-article-container {
             max-width: 800px;
-            margin: 8rem auto 4rem auto;
+            margin: 8rem auto 10rem auto;
             padding: 0 var(--page-padding);
         }
         .dev-article {
@@ -293,12 +293,12 @@
 <p>The obvious next step is hooking this up to real storage, memory mapped or direct I/O, to see how much of this advantage survives once disk latency enters the picture. I'd also like to replace the delta buffer with a proper gapped array design (closer to what ALEX does), which would allow true in place insertions instead of the buffer and retrain approach used here. Beyond that, real concurrency control and testing against actual filesystem traces (rather than synthetic distributions) feel like the two things standing between "a fun from scratch project" and something you could point to as evidence this approach works in practice.</p>
 <h2>Related work, if you want to go deeper</h2>
 <ul>
-<li><strong>TableFS</strong> and <strong>BetrFS</strong>, swap in database storage engines (LSM trees, B epsilon trees) in place of traditional filesystem metadata structures.</li>
-<li><strong>The Recursive Model Index (RMI)</strong>, Kraska et al., the original paper proposing learned indexes as a replacement for classic tree indexes.</li>
-<li><strong>FITing Tree</strong> and the <strong>PGM index</strong>, extend the idea with formal, provable error bounds.</li>
-<li><strong>RadixSpline</strong>, focuses on making the model building step itself fast.</li>
-<li><strong>ALEX</strong>, introduces gapped arrays specifically to handle inserts efficiently, which is what inspired the delta buffer design here.</li>
-<li><strong>SwiftKV</strong>, applies learned indexes to distributed filesystem metadata specifically, combining them with LSM trees.</li>
+<li><a href="https://www.usenix.org/conference/atc13/technical-sessions/presentation/ren" target="_blank"><strong>TableFS</strong></a> and <a href="https://www.usenix.org/conference/fast15/technical-sessions/presentation/jannen" target="_blank"><strong>BetrFS</strong></a>, swap in database storage engines (LSM trees, B epsilon trees) in place of traditional filesystem metadata structures.</li>
+<li><a href="https://arxiv.org/abs/1712.01208" target="_blank"><strong>The Recursive Model Index (RMI)</strong></a>, Kraska et al., the original paper proposing learned indexes as a replacement for classic tree indexes.</li>
+<li><a href="https://dl.acm.org/doi/10.1145/3299869.3319860" target="_blank"><strong>FITing Tree</strong></a> and the <a href="https://arxiv.org/abs/2003.07916" target="_blank"><strong>PGM index</strong></a>, extend the idea with formal, provable error bounds.</li>
+<li><a href="https://arxiv.org/abs/2004.14541" target="_blank"><strong>RadixSpline</strong></a>, focuses on making the model building step itself fast.</li>
+<li><a href="https://dl.acm.org/doi/10.1145/3318464.3389711" target="_blank"><strong>ALEX</strong></a>, introduces gapped arrays specifically to handle inserts efficiently, which is what inspired the delta buffer design here.</li>
+<li><a href="https://ieeexplore.ieee.org/document/9184589" target="_blank"><strong>SwiftKV</strong></a>, applies learned indexes to distributed filesystem metadata specifically, combining them with LSM trees.</li>
 </ul>
 </section>
 </article>
