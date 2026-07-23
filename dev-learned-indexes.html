@@ -12,7 +12,7 @@
             startOnLoad: true,
             theme: 'base',
             themeVariables: {
-                fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans serif",
                 primaryColor: '#FDFBF7',
                 primaryTextColor: '#1a1a1a',
                 primaryBorderColor: 'rgba(26, 26, 26, 0.55)',
@@ -23,139 +23,139 @@
         });
     </script>
     <style>
-        .dev-article-page {
-            overflow-y: auto;
+        .dev article page {
+            overflow y: auto;
         }
-        .dev-article-container {
-            max-width: 800px;
+        .dev article container {
+            max width: 800px;
             margin: 8rem auto 4rem auto;
-            padding: 0 var(--page-padding);
+            padding: 0 var(--page padding);
         }
-        .dev-article {
-            line-height: 1.6;
-            color: var(--text-primary);
+        .dev article {
+            line height: 1.6;
+            color: var(--text primary);
         }
-        .dev-article-header {
-            margin-bottom: 3rem;
+        .dev article header {
+            margin bottom: 3rem;
         }
-        .dev-article-header h1 {
-            font-size: clamp(1.5rem, 4vw, 3rem);
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            font-weight: 500;
-            letter-spacing: -0.02em;
+        .dev article header h1 {
+            font size: clamp(1.5rem, 4vw, 3rem);
+            line height: 1.2;
+            margin bottom: 1rem;
+            font weight: 500;
+            letter spacing: -0.02em;
         }
-        .dev-article-meta {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+        .dev article meta {
+            font size: 0.9rem;
+            color: var(--text secondary);
             display: flex;
             gap: 1.5rem;
         }
-        .dev-article-abstract {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 3rem;
-            padding-left: 1.5rem;
-            border-left: 2px solid var(--text-primary);
+        .dev article abstract {
+            font size: 1.1rem;
+            font weight: 500;
+            color: var(--text secondary);
+            margin bottom: 3rem;
+            padding left: 1.5rem;
+            border left: 2px solid var(--text primary);
         }
-        .dev-article h2 {
-            font-size: 1.5rem;
+        .dev article h2 {
+            font size: 1.5rem;
             margin: 3rem 0 1.5rem 0;
-            font-weight: 500;
+            font weight: 500;
         }
-        .dev-article h3 {
-            font-size: 1.2rem;
+        .dev article h3 {
+            font size: 1.2rem;
             margin: 2rem 0 1rem 0;
-            font-weight: 500;
+            font weight: 500;
         }
-        .dev-article p {
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            color: var(--text-secondary);
+        .dev article p {
+            margin bottom: 1.5rem;
+            font size: 1rem;
+            color: var(--text secondary);
         }
-        .dev-article ul {
-            margin-bottom: 1.5rem;
-            padding-left: 2rem;
-            color: var(--text-secondary);
+        .dev article ul {
+            margin bottom: 1.5rem;
+            padding left: 2rem;
+            color: var(--text secondary);
         }
-        .dev-article li {
-            margin-bottom: 0.5rem;
+        .dev article li {
+            margin bottom: 0.5rem;
         }
-        .dev-article-figure {
+        .dev article figure {
             margin: 3rem 0;
             padding: 2rem;
             background: rgba(26, 26, 26, 0.03);
-            border-radius: 8px;
+            border radius: 8px;
         }
-        .dev-article-figure figcaption {
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: var(--text-caption);
-            text-align: center;
+        .dev article figure figcaption {
+            margin top: 1.5rem;
+            font size: 0.85rem;
+            color: var(--text caption);
+            text align: center;
         }
-        .dev-article-table {
+        .dev article table {
             margin: 3rem 0;
             width: 100%;
-            overflow-x: auto;
+            overflow x: auto;
         }
-        .dev-article-table table {
+        .dev article table table {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
+            border collapse: collapse;
+            font size: 0.9rem;
         }
-        .dev-article-table th, .dev-article-table td {
+        .dev article table th, .dev article table td {
             padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(26, 26, 26, 0.1);
-            color: var(--text-secondary);
+            text align: left;
+            border bottom: 1px solid rgba(26, 26, 26, 0.1);
+            color: var(--text secondary);
         }
-        .dev-article-table th {
-            font-weight: 500;
-            color: var(--text-primary);
+        .dev article table th {
+            font weight: 500;
+            color: var(--text primary);
         }
         .mermaid {
             display: flex;
-            justify-content: center;
+            justify content: center;
         }
         .mermaid * {
-            font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
+            font family: 'Helvetica Neue', 'Helvetica', 'Arial', sans serif !important;
         }
 
         /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .dev-article-container {
+        @media (max width: 768px) {
+            .dev article container {
                 margin: 6rem auto 2rem auto;
                 padding: 0 1.25rem;
             }
-            .dev-article-header h1 {
-                font-size: clamp(1.75rem, 6vw, 2.5rem);
+            .dev article header h1 {
+                font size: clamp(1.75rem, 6vw, 2.5rem);
             }
-            .dev-article h2 {
-                font-size: 1.35rem;
+            .dev article h2 {
+                font size: 1.35rem;
                 margin: 2rem 0 1rem 0;
             }
-            .dev-article h3 {
-                font-size: 1.15rem;
+            .dev article h3 {
+                font size: 1.15rem;
                 margin: 1.5rem 0 0.75rem 0;
             }
-            .dev-article-figure {
+            .dev article figure {
                 padding: 1rem;
                 margin: 2rem 0;
             }
             .mermaid {
-                max-width: 100%;
-                overflow-x: auto;
-                justify-content: flex-start;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 1rem; /* Space for scrollbar */
+                max width: 100%;
+                overflow x: auto;
+                justify content: flex start;
+                -webkit overflow scrolling: touch;
+                padding bottom: 1rem; /* Space for scrollbar */
             }
             .mermaid svg {
-                max-width: 100% !important;
+                max width: 100% !important;
                 height: auto !important;
             }
-            .dev-article-table table {
-                min-width: 500px; /* Allows horizontal scroll for the table on small screens */
+            .dev article table table {
+                min width: 500px; /* Allows horizontal scroll for the table on small screens */
             }
         }
     </style>
@@ -186,31 +186,31 @@
             </header>
 
             <section class="dev-article-abstract">
-                <p>If you've taken an intro systems course, you've probably built a hash table or a B-tree and been told "this is how databases index things." What you might not have spent much time on is <em>filesystem metadata</em> — the inode tables and directory entries that tell your OS where a file actually lives on disk. It turns out this is the exact same problem in disguise: given a key (a filename, an inode number, a path), find the location of the data it points to. It's a key-value indexing problem wearing a filesystem costume.</p>
-                <p>Traditional filesystems handle this with tree structures — B-trees, B+trees, and their many variants. They work, but they weren't really designed with today's workloads in mind: filesystems full of millions of small files, like you'd see in object storage, container images, or ML training datasets with millions of tiny sample files. Projects like TableFS and BetrFS noticed this mismatch and responded by swapping in full database storage engines (like LSM-trees) in place of classic inode structures, trading some complexity for much better performance on metadata-heavy workloads.</p>
-                <p>Around the same time, a different idea started circulating in the database systems community: <strong>learned indexes</strong>. The core insight, from a 2018 paper by Kraska et al., is almost embarrassingly simple once you hear it: an index is just a function. Give it a key, it gives you back a position. A B-tree approximates this function using pointers and comparisons. But what if you just... learned the function directly, using a small machine learning model? If your keys follow some kind of pattern (and real-world keys almost always do — timestamps, sequential IDs, sorted paths), a simple model can predict "roughly where" a key should be, and you only need a tiny bit of local searching to correct for the model's error.</p>
-                <p>This project is my attempt to actually build that idea from scratch — no borrowed index libraries, no shortcuts — and see whether it holds up as well as the papers say it does, specifically in the context of filesystem-style metadata lookups.</p>
+                <p>If you've taken an intro systems course, you've probably built a hash table or a B tree and been told "this is how databases index things." What you might not have spent much time on is <em>filesystem metadata</em>, the inode tables and directory entries that tell your OS where a file actually lives on disk. It turns out this is the exact same problem in disguise: given a key (a filename, an inode number, a path), find the location of the data it points to. It's a key value indexing problem wearing a filesystem costume.</p>
+                <p>Traditional filesystems handle this with tree structures: B trees, B+trees, and their many variants. They work, but they weren't really designed with today's workloads in mind: filesystems full of millions of small files, like you'd see in object storage, container images, or ML training datasets with millions of tiny sample files. Projects like TableFS and BetrFS noticed this mismatch and responded by swapping in full database storage engines (like LSM trees) in place of classic inode structures, trading some complexity for much better performance on metadata heavy workloads.</p>
+                <p>Around the same time, a different idea started circulating in the database systems community: <strong>learned indexes</strong>. The core insight, from a 2018 paper by Kraska et al., is almost embarrassingly simple once you hear it: an index is just a function. Give it a key, it gives you back a position. A B tree approximates this function using pointers and comparisons. But what if you just... learned the function directly, using a small machine learning model? If your keys follow some kind of pattern (and real world keys almost always do, like timestamps, sequential IDs, sorted paths), a simple model can predict "roughly where" a key should be, and you only need a tiny bit of local searching to correct for the model's error.</p>
+                <p>This project is my attempt to actually build that idea from scratch, no borrowed index libraries, no shortcuts, and see whether it holds up as well as the papers say it does, specifically in the context of filesystem style metadata lookups.</p>
                 <p><strong>A quick note on scope, since it matters for how to read the results:</strong> this is a study of the <em>index layer only</em>. I'm not building a filesystem. There's no disk I/O, no page cache, no crash recovery. Think of it as isolating one gear in a much bigger machine to see how fast that gear alone can spin.</p>
             </section>
 
             <section class="dev-article-content">
                 <h2>Some background you'll want before the results make sense</h2>
-                <p><strong>What's wrong with trees, exactly?</strong><br>Nothing is "wrong" with them — B-trees are one of the great success stories of computer science. But they carry overhead that scales linearly-ish with the number of keys: pointers, node headers, and the branching structure itself all live in memory even though they don't encode any real information about your data, just where to find it. As the number of keys grows into the millions, this overhead adds up and starts to hurt cache performance, since you're bouncing around more distinct memory locations to find one key.</p>
+                <p><strong>What's wrong with trees, exactly?</strong><br>Nothing is "wrong" with them , B trees are one of the great success stories of computer science. But they carry overhead that scales linearly ish with the number of keys: pointers, node headers, and the branching structure itself all live in memory even though they don't encode any real information about your data, just where to find it. As the number of keys grows into the millions, this overhead adds up and starts to hurt cache performance, since you're bouncing around more distinct memory locations to find one key.</p>
                 
-                <p><strong>What is a learned index actually doing?</strong><br>Picture your keys sorted and plotted on a graph: key value on the x-axis, position in the sorted array on the y-axis. If your keys are roughly sequential or evenly distributed, this plot looks a lot like a straight line. A linear regression model can fit that line in almost no space at all — just a slope and an intercept, versus megabytes of tree pointers. Real data is never a perfectly straight line, so the model will be wrong by some small, boundable amount. The trick is to record the <em>worst-case error</em> during training, and then do a tiny binary search within that error window to correct for it. You get most of the win of "just compute the position with math" and none of the risk of silently returning the wrong answer.</p>
+                <p><strong>What is a learned index actually doing?</strong><br>Picture your keys sorted and plotted on a graph: key value on the x axis, position in the sorted array on the y axis. If your keys are roughly sequential or evenly distributed, this plot looks a lot like a straight line. A linear regression model can fit that line in almost no space at all , just a slope and an intercept, versus megabytes of tree pointers. Real data is never a perfectly straight line, so the model will be wrong by some small, boundable amount. The trick is to record the <em>worst case error</em> during training, and then do a tiny binary search within that error window to correct for it. You get most of the win of "just compute the position with math" and none of the risk of silently returning the wrong answer.</p>
 
-                <p><strong>The insertion problem.</strong><br>Here's the catch: a trained model is <em>static</em>. It was fit to a specific dataset. If you insert a new key in the middle of your sorted structure, in principle every prediction downstream of it shifts by one, and your careful error bounds are no longer trustworthy. Trees handle new keys natively (that's what all those pointers are for). Learned indexes need a bolt-on strategy, and this project uses one inspired by the ALEX paper: a small <strong>delta buffer</strong> — think of it as a scratchpad — where new keys land immediately. Lookups check the main learned model first, and fall back to the delta buffer if they don't find what they're looking for. Periodically, once the buffer fills up, its contents get merged into the main sorted array and the model retrains from scratch on the new, larger dataset.</p>
+                <p><strong>The insertion problem.</strong><br>Here's the catch: a trained model is <em>static</em>. It was fit to a specific dataset. If you insert a new key in the middle of your sorted structure, in principle every prediction downstream of it shifts by one, and your careful error bounds are no longer trustworthy. Trees handle new keys natively (that's what all those pointers are for). Learned indexes need a bolt on strategy, and this project uses one inspired by the ALEX paper: a small <strong>delta buffer</strong> , think of it as a scratchpad , where new keys land immediately. Lookups check the main learned model first, and fall back to the delta buffer if they don't find what they're looking for. Periodically, once the buffer fills up, its contents get merged into the main sorted array and the model retrains from scratch on the new, larger dataset.</p>
 
                 <h2>What I actually built</h2>
                 <p>I implemented three index structures, all in C, all built from first principles rather than pulled off a shelf:</p>
                 
-                <p><strong>1. Sorted array with binary search — the baseline.</strong><br>This is the simplest thing that could possibly work. Keep everything sorted, use binary search (O(log n)) to look things up. It needs zero extra memory since the array itself <em>is</em> the index. The catch is insertion: adding a key means shifting every key after it one slot to the right, which is O(n) and gets brutally slow as the array grows. This is precisely the pain point that motivated tree-based indexes in the first place.</p>
+                <p><strong>1. Sorted array with binary search: the baseline.</strong><br>This is the simplest thing that could possibly work. Keep everything sorted, use binary search (O(log n)) to look things up. It needs zero extra memory since the array itself <em>is</em> the index. The catch is insertion: adding a key means shifting every key after it one slot to the right, which is O(n) and gets brutally slow as the array grows. This is precisely the pain point that motivated tree based indexes in the first place.</p>
                 
-                <p><strong>2. A block-based B+tree-style index.</strong><br>I built a simplified two-level structure that looks a lot like the index blocks you'd find in an SSTable (the kind of file format LevelDB or RocksDB use under the hood). Keys are grouped into fixed-size sorted "leaf" blocks of 128 keys each, and a sparse root array keeps track of the maximum key in each leaf. A lookup does a binary search over the (small) root array to find the right leaf, then a second binary search inside that leaf. It's not a fully general, recursively-structured B+tree like you'd find in production, but it captures the same core performance tradeoffs: reasonably fast lookups, and inserts that only need to shift keys locally within one leaf (with an occasional leaf split when a block overflows).</p>
+                <p><strong>2. A block based B+tree style index.</strong><br>I built a simplified two level structure that looks a lot like the index blocks you'd find in an SSTable (the kind of file format LevelDB or RocksDB use under the hood). Keys are grouped into fixed size sorted "leaf" blocks of 128 keys each, and a sparse root array keeps track of the maximum key in each leaf. A lookup does a binary search over the (small) root array to find the right leaf, then a second binary search inside that leaf. It's not a fully general, recursively structured B+tree like you'd find in production, but it captures the same core performance tradeoffs: reasonably fast lookups, and inserts that only need to shift keys locally within one leaf (with an occasional leaf split when a block overflows).</p>
 
-                <p><strong>3. A two-stage learned index (a "Recursive Model Index," or RMI) with a delta buffer.</strong><br>This is the star of the show. It works in two stages, hence "two-stage":<br><strong>Stage 0</strong> is a single linear model. Its only job is triage: given a key, decide which of several Stage 1 models is responsible for it.<br><strong>Stage 1</strong> is a collection of independent linear regression models, each specializing in one slice of the key space, each with its own recorded maximum prediction error from training.</p>
+                <p><strong>3. A two stage learned index (a "Recursive Model Index," or RMI) with a delta buffer.</strong><br>This is the star of the show. It works in two stages, hence "two stage":<br><strong>Stage 0</strong> is a single linear model. Its only job is triage: given a key, decide which of several Stage 1 models is responsible for it.<br><strong>Stage 1</strong> is a collection of independent linear regression models, each specializing in one slice of the key space, each with its own recorded maximum prediction error from training.</p>
                 <p>A lookup flows through Stage 0, gets routed to the right Stage 1 model, gets a predicted position plus an error bound, and then does a tiny bounded binary search around that prediction to find the exact spot. New inserts go straight into the delta buffer described above, and get folded into the main structure (triggering a full retrain) once that buffer fills up.</p>
-                <p><em>(This project is implemented entirely in C, using nothing but the standard math library — no external indexing or ML frameworks. Everything from the linear regression fitting to the binary search bounds was hand-rolled.)</em></p>
+                <p><em>(This project is implemented entirely in C, using nothing but the standard math library , no external indexing or ML frameworks. Everything from the linear regression fitting to the binary search bounds was hand rolled.)</em></p>
 
 <figure class="dev-article-figure">
                     <div class="mermaid">
@@ -248,13 +248,13 @@
                 <h2>How I tested it</h2>
                 <p>I generated three synthetic key distributions meant to stand in for realistic filesystem access patterns:</p>
                 <ul>
-                    <li><strong>Sequential keys</strong> — monotonically increasing integers, simulating something like an append-only log.</li>
-                    <li><strong>Uniform random keys</strong> — randomly generated, then sorted; a reasonable stand-in for hashed file paths, where there's no obvious structure for a model to exploit.</li>
-                    <li><strong>Lognormal keys</strong> — meant to simulate the kind of clustering you actually see in real systems, where files bunch up around certain timestamps or size ranges. (Because lognormal sampling clusters so heavily, I could only generate about 2.86 million distinct values even when aiming for 5 million — a neat little reminder that "just generate more random numbers" doesn't always get you what you want.)</li>
+                    <li><strong>Sequential keys</strong> , monotonically increasing integers, simulating something like an append only log.</li>
+                    <li><strong>Uniform random keys</strong> , randomly generated, then sorted; a reasonable stand in for hashed file paths, where there's no obvious structure for a model to exploit.</li>
+                    <li><strong>Lognormal keys</strong> , meant to simulate the kind of clustering you actually see in real systems, where files bunch up around certain timestamps or size ranges. (Because lognormal sampling clusters so heavily, I could only generate about 2.86 million distinct values even when aiming for 5 million , a neat little reminder that "just generate more random numbers" doesn't always get you what you want.)</li>
                 </ul>
                 <p>For <strong>lookups</strong>, I populated each index and fired off 200,000 random point queries, measuring average nanoseconds per lookup, across dataset sizes ranging up to 5 million keys.</p>
-                <p>For <strong>inserts</strong>, I built each index using 80% of a dataset, then streamed in the remaining 20% as inserts — importantly, in randomized order, so the baseline array wouldn't get an unfair "best case" from appending purely at the end. I capped insertion tests at 200,000 keys, mostly because the plain array's insertion cost gets so bad at scale that testing it further wasn't informative.</p>
-                <p>Everything ran single-threaded on a standard Linux container, so take the absolute numbers as relative comparisons between these three structures on identical hardware, not as some universal benchmark of "how fast an index can be."</p>
+                <p>For <strong>inserts</strong>, I built each index using 80% of a dataset, then streamed in the remaining 20% as inserts, importantly, in randomized order, so the baseline array wouldn't get an unfair "best case" from appending purely at the end. I capped insertion tests at 200,000 keys, mostly because the plain array's insertion cost gets so bad at scale that testing it further wasn't informative.</p>
+                <p>Everything ran single threaded on a standard Linux container, so take the absolute numbers as relative comparisons between these three structures on identical hardware, not as some universal benchmark of "how fast an index can be."</p>
 
                 <h2>Results</h2>
                 <h3>Lookups get faster, and the gap widens with scale</h3>
@@ -284,42 +284,42 @@
                 
                 <p><em>(uniform key distribution shown; sequential and lognormal followed similar patterns)</em></p>
                 <p>At 10,000 keys, the learned index is already more than twice as fast as the plain array. By 5 million keys, it's roughly <strong>3.4x faster than the array and 4x faster than the B+tree</strong>, at 123.2 nanoseconds per lookup. This is the central promise of learned indexes playing out in practice: once your model is trained, a lookup is mostly arithmetic (a couple of multiplications and additions) plus a tiny bounded search, instead of a full O(log n) walk through comparisons scattered across memory.</p>
-                <p>One thing worth flagging honestly: in a few configurations, my hand-rolled B+tree was actually a touch slower than the plain sorted array. I don't think that's a knock against B+trees as a concept — it's more likely an artifact of my leaf size choice (128 keys) causing extra cache misses. A production-grade B+tree implementation, tuned properly, would very likely beat the plain array comfortably. Worth keeping in mind if you go implement one yourself for a class project.</p>
+                <p>One thing worth flagging honestly: in a few configurations, my hand rolled B+tree was actually a touch slower than the plain sorted array. I don't think that's a knock against B+trees as a concept , it's more likely an artifact of my leaf size choice (128 keys) causing extra cache misses. A production grade B+tree implementation, tuned properly, would very likely beat the plain array comfortably. Worth keeping in mind if you go implement one yourself for a class project.</p>
 
                 <h3>The memory story is the most dramatic part</h3>
-                <p>Across every dataset size tested, the learned index used about <strong>688x less memory</strong> than the B+tree just to store the index itself. This isn't a small optimization — it's close to three orders of magnitude. The reason is almost philosophical: a tree stores its structural knowledge (pointers, node boundaries) explicitly, taking up real memory proportional to the number of keys. A learned index stores that same knowledge <em>implicitly</em>, compressed into the coefficients of a handful of linear equations. You're trading explicit bookkeeping for compressed, approximate knowledge plus a cheap correction step — and it turns out that trade is extremely favorable when your data has any regularity at all. Practically, this also means more of your index can fit in CPU cache, which is a big part of why the lookup times above are so much faster too — it's not just fewer instructions, it's fewer cache misses.</p>
+                <p>Across every dataset size tested, the learned index used about <strong>688x less memory</strong> than the B+tree just to store the index itself. This isn't a small optimization , it's close to three orders of magnitude. The reason is almost philosophical: a tree stores its structural knowledge (pointers, node boundaries) explicitly, taking up real memory proportional to the number of keys. A learned index stores that same knowledge <em>implicitly</em>, compressed into the coefficients of a handful of linear equations. You're trading explicit bookkeeping for compressed, approximate knowledge plus a cheap correction step , and it turns out that trade is extremely favorable when your data has any regularity at all. Practically, this also means more of your index can fit in CPU cache, which is a big part of why the lookup times above are so much faster too , it's not just fewer instructions, it's fewer cache misses.</p>
 
                 <h3>Inserts: fast on average, but with a hidden cost</h3>
-                <p>At 200,000 keys: the plain array took 19.1 microseconds per insert (all that shifting adds up), the B+tree took 2.78 microseconds, and the learned index averaged just <strong>1.14 microseconds</strong> per insert. On the surface, the learned index wins again. But that average is hiding something important: most inserts are cheap because they just land in the small delta buffer. The expensive part — a full model retrain — happens rarely, but when it happens, it's a real spike in cost. An average is a nice number to put in a table, but for a real system, you'd care a lot about that tail latency too.</p>
+                <p>At 200,000 keys: the plain array took 19.1 microseconds per insert (all that shifting adds up), the B+tree took 2.78 microseconds, and the learned index averaged just <strong>1.14 microseconds</strong> per insert. On the surface, the learned index wins again. But that average is hiding something important: most inserts are cheap because they just land in the small delta buffer. The expensive part , a full model retrain , happens rarely, but when it happens, it's a real spike in cost. An average is a nice number to put in a table, but for a real system, you'd care a lot about that tail latency too.</p>
 
                 <h3>Lookups don't degrade much even while you're actively inserting</h3>
-                <p>This was the result that surprised me most. I expected lookup latency to creep upward as the delta buffer filled up (since lookups now have to check two places: the model, then the buffer, if the model misses). Instead, lookup latency stayed close to 117 nanoseconds throughout a whole stream of inserts — still comfortably beating the B+tree's roughly 250 nanoseconds under the same conditions. The delta buffer did its job: it absorbed new writes without meaningfully degrading the accuracy (and therefore search cost) of the underlying model.</p>
+                <p>This was the result that surprised me most. I expected lookup latency to creep upward as the delta buffer filled up (since lookups now have to check two places: the model, then the buffer, if the model misses). Instead, lookup latency stayed close to 117 nanoseconds throughout a whole stream of inserts , still comfortably beating the B+tree's roughly 250 nanoseconds under the same conditions. The delta buffer did its job: it absorbed new writes without meaningfully degrading the accuracy (and therefore search cost) of the underlying model.</p>
 
                 <h2>What this means, and where it stops meaning that</h2>
-                <p>If you're building something that's mostly read, with data that doesn't change all that often, and the keys have <em>any</em> regular structure (timestamps, sequential IDs, roughly sorted paths — which describes a lot of real-world metadata), a learned index is a genuinely compelling option: faster lookups, and a memory footprint small enough to matter for cache-sensitive systems.</p>
-                <p>The moment your workload is write-heavy or highly concurrent, the story gets more complicated. The delta buffer strategy used here works, but it's meaningfully more moving parts than "a B+tree splits a node when it's full." You now have two structures to keep consistent, a periodic retrain that needs to happen safely, and — in a real production system — you'd need to think hard about what happens to lookups <em>while</em> a retrain is in progress. That's a genuinely hard concurrency problem, and it's the kind of thing that separates "cool research result" from "thing you'd actually ship."</p>
-                <p><strong>Where would this actually be useful?</strong> A few real candidates: read-heavy metadata layers for object storage or ML training data pipelines (millions of small files, rarely modified after being written), in-memory database indexes where the working set needs to fit in cache, and flash translation layers in SSDs, which map logical to physical addresses — a problem with a strikingly similar shape to this one, and something people have already started exploring in the literature.</p>
+                <p>If you're building something that's mostly read, with data that doesn't change all that often, and the keys have <em>any</em> regular structure (timestamps, sequential IDs, roughly sorted paths , which describes a lot of real world metadata), a learned index is a genuinely compelling option: faster lookups, and a memory footprint small enough to matter for cache sensitive systems.</p>
+                <p>The moment your workload is write heavy or highly concurrent, the story gets more complicated. The delta buffer strategy used here works, but it's meaningfully more moving parts than "a B+tree splits a node when it's full." You now have two structures to keep consistent, a periodic retrain that needs to happen safely, and , in a real production system , you'd need to think hard about what happens to lookups <em>while</em> a retrain is in progress. That's a genuinely hard concurrency problem, and it's the kind of thing that separates "cool research result" from "thing you'd actually ship."</p>
+                <p><strong>Where would this actually be useful?</strong> A few real candidates: read heavy metadata layers for object storage or ML training data pipelines (millions of small files, rarely modified after being written), in memory database indexes where the working set needs to fit in cache, and flash translation layers in SSDs, which map logical to physical addresses , a problem with a strikingly similar shape to this one, and something people have already started exploring in the literature.</p>
 
                 <h2>Limitations, said plainly</h2>
                 <ul>
-                    <li><strong>This never touched a disk.</strong> No I/O, no page cache effects — real systems are usually I/O-bound in ways this study doesn't capture at all.</li>
+                    <li><strong>This never touched a disk.</strong> No I/O, no page cache effects , real systems are usually I/O bound in ways this study doesn't capture at all.</li>
                     <li><strong>Synthetic data isn't real data.</strong> My three distributions are reasonable proxies, but real filesystem traces have bursty, messier patterns that are harder to model cleanly.</li>
-                    <li><strong>Single-threaded, no locking.</strong> A real metadata layer has to handle many concurrent operations safely — this project sidesteps that problem entirely.</li>
+                    <li><strong>Single threaded, no locking.</strong> A real metadata layer has to handle many concurrent operations safely , this project sidesteps that problem entirely.</li>
                     <li><strong>The B+tree baseline is simplified.</strong> A serious, optimized implementation would likely close some of the performance gap shown here.</li>
-                    <li><strong>This is an index, not a filesystem.</strong> There's no crash recovery, no actual file storage — just the lookup structure.</li>
+                    <li><strong>This is an index, not a filesystem.</strong> There's no crash recovery, no actual file storage , just the lookup structure.</li>
                 </ul>
 
                 <h2>Where I'd take this next</h2>
-                <p>The obvious next step is hooking this up to real storage — memory-mapped or direct I/O — to see how much of this advantage survives once disk latency enters the picture. I'd also like to replace the delta buffer with a proper gapped-array design (closer to what ALEX does), which would allow true in-place insertions instead of the buffer-and-retrain approach used here. Beyond that, real concurrency control and testing against actual filesystem traces (rather than synthetic distributions) feel like the two things standing between "a fun from-scratch project" and something you could point to as evidence this approach works in practice.</p>
+                <p>The obvious next step is hooking this up to real storage , memory mapped or direct I/O , to see how much of this advantage survives once disk latency enters the picture. I'd also like to replace the delta buffer with a proper gapped array design (closer to what ALEX does), which would allow true in place insertions instead of the buffer and retrain approach used here. Beyond that, real concurrency control and testing against actual filesystem traces (rather than synthetic distributions) feel like the two things standing between "a fun from scratch project" and something you could point to as evidence this approach works in practice.</p>
 
                 <h2>Related work, if you want to go deeper</h2>
                 <ul>
-                    <li><strong>TableFS</strong> and <strong>BetrFS</strong> — swap in database storage engines (LSM-trees, B-epsilon trees) in place of traditional filesystem metadata structures.</li>
-                    <li><strong>The Recursive Model Index (RMI)</strong>, Kraska et al. — the original paper proposing learned indexes as a replacement for classic tree indexes.</li>
-                    <li><strong>FITing-Tree</strong> and the <strong>PGM-index</strong> — extend the idea with formal, provable error bounds.</li>
-                    <li><strong>RadixSpline</strong> — focuses on making the model-building step itself fast.</li>
-                    <li><strong>ALEX</strong> — introduces gapped arrays specifically to handle inserts efficiently, which is what inspired the delta buffer design here.</li>
-                    <li><strong>SwiftKV</strong> — applies learned indexes to distributed filesystem metadata specifically, combining them with LSM-trees.</li>
+                    <li><strong>TableFS</strong> and <strong>BetrFS</strong> , swap in database storage engines (LSM trees, B epsilon trees) in place of traditional filesystem metadata structures.</li>
+                    <li><strong>The Recursive Model Index (RMI)</strong>, Kraska et al.: the original paper proposing learned indexes as a replacement for classic tree indexes.</li>
+                    <li><strong>FITing Tree</strong> and the <strong>PGM index</strong> , extend the idea with formal, provable error bounds.</li>
+                    <li><strong>RadixSpline</strong> , focuses on making the model building step itself fast.</li>
+                    <li><strong>ALEX</strong> , introduces gapped arrays specifically to handle inserts efficiently, which is what inspired the delta buffer design here.</li>
+                    <li><strong>SwiftKV</strong> , applies learned indexes to distributed filesystem metadata specifically, combining them with LSM trees.</li>
                 </ul>
             </section>
 </article>
