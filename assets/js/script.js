@@ -97,9 +97,6 @@
             metaLocationEl.textContent = 'location hidden';
         }
     }
-
-    }
-
     // fetchLocation(); // Deferred to custom popup logic
 
     // ========================================
