@@ -883,25 +883,50 @@ a {
 }
 
 @media (max-width: 900px) {
-    .contact-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-    }
-
     .contact-section {
         position: relative;
         height: auto;
         min-height: 100vh;
-        padding-top: calc(var(--page-padding) + 5rem);
+        padding: calc(var(--page-padding) + 5rem) var(--page-padding) calc(var(--page-padding) + 2rem);
+        overflow-x: hidden;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        max-width: 500px;
+        margin: 0 auto;
     }
 
     .contact-card-wrapper {
         order: -1;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .contact-form-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .contact-form {
+        width: 100%;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .form-input {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .reflective-card-container {
         width: 100%;
-        max-width: 340px;
+        max-width: 300px;
         height: 380px;
     }
 }
