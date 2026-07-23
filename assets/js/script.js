@@ -333,17 +333,8 @@
                     });
 
                     if (response.ok) {
-                        formStatus.textContent = 'message sent successfully! shane will get back to you soon.';
-                        formStatus.classList.add('success');
                         contactForm.reset();
-
-                        // Reset card text defaults
-                        if (cardName) cardName.textContent = 'YOUR NAME';
-                        if (cardEmail) cardEmail.textContent = 'YOUR@EMAIL.COM';
-                        if (cardSubject) cardSubject.textContent = 'PROJECT INQUIRY';
-
-                        // Play the card wobble + glow animation
-                        playCardSentAnimation();
+                        window.location.href = 'success.html';
                     } else {
                         throw new Error('Server response error');
                     }
