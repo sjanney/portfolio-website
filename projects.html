@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Shane Janney — Projects">
+    <title>Shane Janney — Projects</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/Stack.css">
+    
+    <style>
+        .projects-content {
+            padding-top: 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
+        .projects-header {
+            margin-bottom: 4rem;
+        }
+        
+        .projects-title {
+            font-size: 2.5rem;
+            font-weight: normal;
+            margin-bottom: 0.5rem;
+        }
+        
+        .projects-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+        }
+        
+        .project-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 6rem;
+        }
+        
+        .project-info h2 {
+            font-size: 2rem;
+            font-weight: normal;
+            margin-bottom: 1rem;
+        }
+        
+        .project-info p {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .project-meta {
+            font-size: 0.95rem;
+            color: #888;
+            border-left: 2px solid #ddd;
+            padding-left: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .project-stack-container {
+            width: 100%;
+            max-width: 550px;
+            height: 650px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .project-item {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .project-stack-container {
+                height: 400px;
+                order: -1; /* Image stack above text on mobile */
+            }
+            .projects-title {
+                font-size: 1.75rem;
+            }
+            .project-info h2 {
+                font-size: 1.5rem;
+            }
+            .projects-subtitle,
+            .project-info p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .project-stack-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="dev-work-page">
+    <main class="dev-container">
+        <!-- Navigation -->
+        <nav class="nav" id="nav">
+            <a href="index.html" class="nav-link">home</a>
+            <a href="bio.html" class="nav-link">bio</a>
+            <a href="work.html" class="nav-link">work</a>
+            <a href="contact.html" class="nav-link">contact</a>
+            <a href="projects.html" class="nav-link active">projects</a>
+            <a href="dev-work.html" class="nav-link">dev work</a>
+        </nav>
+
+        <!-- Time & Location -->
+        <div class="meta-info" id="metaInfo">
+            <div class="meta-time" id="metaTime">--:-- --</div>
+            <div class="meta-location" id="metaLocation">locating...</div>
+        </div>
+
+        <div class="projects-content">
+            <header class="projects-header">
+                <h1 class="projects-title">projects</h1>
+                <p class="projects-subtitle">startup ventures and independent work.</p>
+            </header>
+            
+            <article class="project-item">
+                <div class="project-info">
+                    <h2>Chord</h2>
+                    <p>
+                        A stealth-startup application designed to let people share and discover music purely through personal connections. 
+                    </p>
+                    <p>
+                        The platform focused on organic, relationship-driven music discovery rather than algorithmic curation. It successfully reached the pre-seed stage and gained meaningful early traction before ultimately shutting down.
+                    </p>
+                    <div class="project-meta">
+                        <strong>Role:</strong> Founder / Engineer<br>
+                        <strong>Status:</strong> Shut down (Pre-seed)
+                    </div>
+                </div>
+                
+                <div id="music-app-stack" class="project-stack-container"></div>
+            </article>
+            
+            <article class="project-item">
+                <div class="project-info">
+                    <h2><a href="https://stem-kappa.vercel.app/" target="_blank" style="text-decoration: underline; text-underline-offset: 2px; color: inherit;">stem ↗</a></h2>
+                    <p>
+                        A visual design research tool for creatives. 
+                    </p>
+                    <p>
+                        The platform was designed to help creatives streamline and manage their visual research process. It reached the pre-seed stage and is now out of stealth, though development is currently on pause.
+                    </p>
+                    <div class="project-meta">
+                        <strong>Role:</strong> Founder / Engineer<br>
+                        <strong>Status:</strong> On pause (Pre-seed)
+                    </div>
+                </div>
+                
+                <div class="project-stack-container" style="display: flex; align-items: center; justify-content: center; height: auto;">
+                    <video src="stem_teaser.mp4" autoplay loop muted playsinline style="width: 100%; border-radius: 1.5rem; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"></video>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <script src="assets/js/script.js" defer></script>
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@11.16.0/dist/framer-motion.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { motion, useMotionValue, useTransform } = window.Motion;
+
+        function CardRotate({ children, onSendToBack, sensitivity, disableDrag = false }) {
+          const x = useMotionValue(0);
+          const y = useMotionValue(0);
+          const rotateX = useTransform(y, [-100, 100], [60, -60]);
+          const rotateY = useTransform(x, [-100, 100], [-60, 60]);
+
+          function handleDragEnd(_, info) {
+            if (Math.abs(info.offset.x) > sensitivity || Math.abs(info.offset.y) > sensitivity) {
+              onSendToBack();
+            } else {
+              x.set(0);
+              y.set(0);
+            }
+          }
+
+          if (disableDrag) {
+            return (
+              <motion.div className="card-rotate-disabled" style={{ x: 0, y: 0 }}>
+                {children}
+              </motion.div>
+            );
+          }
+
+          return (
+            <motion.div
+              className="card-rotate"
+              style={{ x, y, rotateX, rotateY }}
+              drag
+              dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
+              dragElastic={0.6}
+              whileTap={{ cursor: 'grabbing' }}
+              onDragEnd={handleDragEnd}
+            >
+              {children}
+            </motion.div>
+          );
+        }
+
+        function Stack({
+          randomRotation = false,
+          sensitivity = 200,
+          cards = [],
+          animationConfig = { stiffness: 260, damping: 20 },
+          sendToBackOnClick = false,
+          autoplay = false,
+          autoplayDelay = 3000,
+          pauseOnHover = false,
+          mobileClickOnly = false,
+          mobileBreakpoint = 768
+        }) {
+          const [isMobile, setIsMobile] = useState(false);
+          const [isPaused, setIsPaused] = useState(false);
+
+          useEffect(() => {
+            const checkMobile = () => {
+              setIsMobile(window.innerWidth < mobileBreakpoint);
+            };
+
+            checkMobile();
+            window.addEventListener('resize', checkMobile);
+            return () => window.removeEventListener('resize', checkMobile);
+          }, [mobileBreakpoint]);
+
+          const shouldDisableDrag = mobileClickOnly && isMobile;
+          const shouldEnableClick = sendToBackOnClick || shouldDisableDrag;
+
+          const [stack, setStack] = useState(() => {
+            if (cards.length) {
+              return cards.map((content, index) => ({ id: index + 1, content }));
+            }
+            return [];
+          });
+
+          useEffect(() => {
+            if (cards.length) {
+              setStack(cards.map((content, index) => ({ id: index + 1, content })));
+            }
+          }, [cards]);
+
+          const sendToBack = id => {
+            setStack(prev => {
+              const newStack = [...prev];
+              const index = newStack.findIndex(card => card.id === id);
+              const [card] = newStack.splice(index, 1);
+              newStack.unshift(card);
+              return newStack;
+            });
+          };
+
+          useEffect(() => {
+            if (autoplay && stack.length > 1 && !isPaused) {
+              const interval = setInterval(() => {
+                const topCardId = stack[stack.length - 1].id;
+                sendToBack(topCardId);
+              }, autoplayDelay);
+
+              return () => clearInterval(interval);
+            }
+          }, [autoplay, autoplayDelay, stack, isPaused]);
+
+          return (
+            <div
+              className="stack-container"
+              onMouseEnter={() => pauseOnHover && setIsPaused(true)}
+              onMouseLeave={() => pauseOnHover && setIsPaused(false)}
+            >
+              {stack.map((card, index) => {
+                const randomRotate = randomRotation ? Math.random() * 10 - 5 : 0;
+                return (
+                  <CardRotate
+                    key={card.id}
+                    onSendToBack={() => sendToBack(card.id)}
+                    sensitivity={sensitivity}
+                    disableDrag={shouldDisableDrag}
+                  >
+                    <motion.div
+                      className="card"
+                      onClick={() => shouldEnableClick && sendToBack(card.id)}
+                      animate={{
+                        rotateZ: (stack.length - index - 1) * 4 + randomRotate,
+                        scale: 1 + index * 0.06 - stack.length * 0.06,
+                        transformOrigin: '90% 90%'
+                      }}
+                      initial={false}
+                      transition={{
+                        type: 'spring',
+                        stiffness: animationConfig.stiffness,
+                        damping: animationConfig.damping
+                      }}
+                    >
+                      {card.content}
+                    </motion.div>
+                  </CardRotate>
+                );
+              })}
+            </div>
+          );
+        }
+
+        // Render the component
+        const images = [
+          "Image 8-15-25 at 2.58 PM.jpeg",
+          "Screenshot 2025-10-16 at 8.19.17 AM.png",
+          "1FD91DF7-9137-4BE3-B62D-88A75CC78880.jpeg"
+        ];
+
+        const cards = images.map((src, i) => (
+          <img 
+            key={i} 
+            src={src} 
+            alt={`project-image-${i}`} 
+            className="card-image"
+          />
+        ));
+
+        const rootElement = document.getElementById('music-app-stack');
+        if (rootElement) {
+          const root = createRoot(rootElement);
+          root.render(
+            <Stack 
+              randomRotation={true}
+              sensitivity={180}
+              sendToBackOnClick={true}
+              cards={cards} 
+            />
+          );
+        }
+    </script>
+</body>
+</html>

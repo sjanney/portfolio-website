@@ -11,7 +11,7 @@
     <meta property="og:description" content="Selected creative work by Shane Janney.">
     <meta property="og:type" content="website">
     <title>Shane Janney — Work</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="preload" href="assets/images/IMG_1151.jpeg" as="image">
 </head>
 
@@ -23,10 +23,10 @@
     <!-- Navigation -->
     <nav class="nav" id="nav">
         <a href="index.html" class="nav-link" data-index="0">home</a>
-        <a href="construction.html" class="nav-link" data-index="1">bio</a>
+        <a href="bio.html" class="nav-link" data-index="1">bio</a>
         <a href="work.html" class="nav-link" data-index="2">work</a>
         <a href="contact.html" class="nav-link" data-index="3">contact</a>
-        <a href="construction.html" class="nav-link" data-index="4">projects</a>
+        <a href="projects.html" class="nav-link" data-index="4">projects</a>
         <a href="dev-work.html" class="nav-link" data-index="5">dev work</a>
     </nav>
 
@@ -82,29 +82,9 @@
                 </div>
             </a>
         </section>
-        <!-- Footer Section -->
-        <section class="footer-section">
-            <div id="footerGrainient" class="grainient-container"></div>
-            <div class="footer-content">
-                <a href="mailto:contact@shanejanney.com" class="footer-link">contact@shanejanney.com</a>
-                <a href="https://instagram.com/shanejanney" class="footer-link" target="_blank">@shanejanney</a>
-            </div>
-        </section>
     </main>
 
-    <script src="script.js" defer></script>
-    <script type="module">
-        import { Grainient } from './grainient.js';
-
-        const footerBg = document.getElementById('footerGrainient');
-        if (footerBg) {
-            new Grainient(footerBg, {
-                color1: '#00FF87', // Vibrant green
-                color2: '#00B8FF', // Vibrant blue
-                color3: '#0A2046'  // Deep blue base
-            });
-        }
-    </script>
+    <script src="assets/js/script.js" defer></script>
 </body>
 
 </html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Learned Indexes for Filesystem Metadata">
+    <title>Shane Janney Learned Indexes for Filesystem Metadata</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                primaryColor: '#FDFBF7',
+                primaryTextColor: '#1a1a1a',
+                primaryBorderColor: 'rgba(26, 26, 26, 0.55)',
+                lineColor: 'rgba(26, 26, 26, 0.55)',
+                secondaryColor: '#f4f4f4',
+                tertiaryColor: '#e0e0e0'
+            }
+        });
+    </script>
+    <style>
+        .dev-article-page {
+            overflow-y: auto;
+        }
+        .dev-article-container {
+            max-width: 800px;
+            margin: 8rem auto 4rem auto;
+            padding: 0 var(--page-padding);
+        }
+        .dev-article {
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        .dev-article-header {
+            margin-bottom: 3rem;
+        }
+        .dev-article-header h1 {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+        .dev-article-meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 1.5rem;
+        }
+        .dev-article-abstract {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--text-primary);
+        }
+        .dev-article h2 {
+            font-size: 1.5rem;
+            margin: 3rem 0 1.5rem 0;
+            font-weight: 500;
+        }
+        .dev-article h3 {
+            font-size: 1.2rem;
+            margin: 2rem 0 1rem 0;
+            font-weight: 500;
+        }
+        .dev-article p {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        .dev-article ul {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+            color: var(--text-secondary);
+        }
+        .dev-article li {
+            margin-bottom: 0.5rem;
+        }
+        .dev-article-figure {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: rgba(26, 26, 26, 0.03);
+            border-radius: 8px;
+        }
+        .dev-article-figure figcaption {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-caption);
+            text-align: center;
+        }
+        .dev-article-table {
+            margin: 3rem 0;
+            width: 100%;
+            overflow-x: auto;
+        }
+        .dev-article-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .dev-article-table th, .dev-article-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+            color: var(--text-secondary);
+        }
+        .dev-article-table th {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        .mermaid * {
+            font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !important;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .dev-article-container {
+                margin: 6rem auto 2rem auto;
+                padding: 0 1.25rem;
+            }
+            .dev-article-header h1 {
+                font-size: clamp(1.75rem, 6vw, 2.5rem);
+            }
+            .dev-article h2 {
+                font-size: 1.35rem;
+                margin: 2rem 0 1rem 0;
+            }
+            .dev-article h3 {
+                font-size: 1.15rem;
+                margin: 1.5rem 0 0.75rem 0;
+            }
+            .dev-article-figure {
+                padding: 1rem;
+                margin: 2rem 0;
+            }
+            .mermaid {
+                max-width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 1rem; /* Space for scrollbar */
+            }
+            .mermaid svg {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+            .dev-article-table table {
+                min-width: 500px; /* Allows horizontal scroll for the table on small screens */
+            }
+        }
+    </style>
+</head>
+<body class="dev-article-page loading">
+    <div class="loader" id="loader"></div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <nav class="nav" id="nav">
+        <a href="index.html" class="nav-link" data-index="0">home</a>
+        <a href="bio.html" class="nav-link" data-index="1">bio</a>
+        <a href="work.html" class="nav-link" data-index="2">work</a>
+        <a href="contact.html" class="nav-link" data-index="3">contact</a>
+        <a href="projects.html" class="nav-link" data-index="4">projects</a>
+        <a href="dev-work.html" class="nav-link" data-index="5">dev work</a>
+    </nav>
+    <div class="meta-info" id="metaInfo">
+        <div class="meta-time" id="metaTime"></div>
+        <div class="meta-location" id="metaLocation">locating...</div>
+    </div>
+
+    <main class="dev-article-container scroll-container">
+        <article class="dev-article">
+            <header class="dev-article-header">
+                <h1>Learned Indexes for Filesystem Metadata: A From Scratch Implementation and Benchmark Study</h1>
+                <div class="dev-article-meta">
+                    <span>July 23, 2026</span>
+                </div>
+            </header>
+
+            <section class="dev-article-abstract">
+                <p>Managing filesystem metadata, such as inode tables and directory entries, is fundamentally a key value indexing problem. Systems like TableFS and BetrFS have addressed this by utilizing database storage engines to improve speed. Alternatively, learned indexes offer a novel approach by replacing large tree data structures with small machine learning models that approximate the storage locations of keys. This project explores that intersection.</p>
+                <p>I present an in memory implementation of three index structures built entirely from scratch. These include a sorted array, a block based B+tree, and a two stage learned index equipped with a delta buffer for insertions. The goal was to rigorously measure lookup latency, memory overhead, and insertion cost across various key distributions scaling up to five million keys.</p>
+                <p>At five million keys, the learned index performed lookups nearly four times faster than the array or B+tree alternatives. Furthermore, it required almost seven hundred times less memory for the index itself. However, handling insertions introduced significant complexity and cost. The following sections detail the implementation, the testing methodology, and the limits of this design.</p>
+            </section>
+
+            <section class="dev-article-content">
+                <h2>Introduction</h2>
+                <p>Two primary concepts motivated this study. First, standard filesystems struggle with metadata heavy workloads involving millions of small files. Projects like TableFS resolve this by implementing database storage engines in place of traditional metadata structures.</p>
+                <p>Second, learned indexes demonstrate that classic indexes essentially approximate a function mapping a key to its physical location. Replacing a large tree with a small mathematical model allows for faster lookups and drastically reduced memory usage, provided there is a reliable method for local error correction.</p>
+                <p>This project applies the learned index concept to filesystem metadata lookups. I conducted a single node, in memory study focused exclusively on the index layer. The study does not evaluate a complete filesystem, distributed systems, or actual physical storage drives.</p>
+                
+                <h2>Related Work</h2>
+                <p><strong>DBMS backed filesystem metadata.</strong> TableFS stores file metadata within an LSM tree rather than typical inode blocks. BetrFS replaces the entire storage structure with B epsilon trees. Both designs seek to achieve high performance for random writes and sequential scans.</p>
+                <p><strong>Learned indexes.</strong> Kraska and colleagues introduced the Recursive Model Index. This design utilizes a cascade of models where each step selects a more specific model, concluding with a bounded local search. Subsequent research expanded on this concept. FITing Tree and the PGM index provided mathematical worst case error bounds. RadixSpline optimized the build process for speed. ALEX introduced gapped arrays to handle insertions efficiently. The delta buffer design in this study draws heavy inspiration from ALEX.</p>
+                <p><strong>Learned indexes for metadata.</strong> SwiftKV proposed integrating LSM trees with learned indexes to resolve read bottlenecks in distributed filesystems. A recent benchmark study examined how learned indexes compete for memory against caches and Bloom filters. Other implementations have adapted learned indexes for flash translation layers. Building on this existing research, my objective was to produce an independent reproduction in a simplified setting.</p>
+
+                <h2>System Design</h2>
+                <p>All three implemented structures serve the same purpose. They accept a 64 bit key and return its logical position or report its absence.</p>
+
+                <h3>Sorted array with binary search (baseline)</h3>
+                <p>This serves as the minimal reference point. Lookups utilize a standard binary search over a flat sorted array. Since the array itself acts as the index, it requires zero additional memory. Insertions, however, require shifting every subsequent key to the right. This represents the exact performance issue that database indexes were created to solve.</p>
+
+                <h3>Block based B+tree style index</h3>
+                <p>I constructed a simplified two level index resembling SSTable index blocks. It features fixed capacity sorted leaf blocks of 128 keys each and a sparse root array tracking the maximum key per leaf. Lookups perform a binary search on the root array followed by a binary search within the target leaf. Insertions require shifting items locally within a leaf and splitting the leaf upon overflow. While not a fully recursive B+tree, it perfectly mirrors the performance characteristics of production storage engines.</p>
+
+                <h3>Learned index (two stage RMI) with a delta buffer</h3>
+                <p>Stage zero consists of a single linear model that routes a key to one of several models in Stage one. Stage one contains multiple independent linear regressions. Each regression covers a specific subset of keys and records its maximum prediction error during training. A lookup evaluates Stage zero, queries the appropriate Stage one model, and performs a binary search bounded by the recorded error margin.</p>
+                <p>Because learned indexes are trained on static data, they require modifications to support insertions. I implemented a delta buffer consisting of a small sorted array. Lookups check the learned index first and consult the delta buffer if necessary. All new insertions are directed to the delta buffer. When the buffer reaches capacity, its contents merge into the main array and the machine learning model retrains completely. Figure 1 illustrates this data flow.</p>
+
+                <figure class="dev-article-figure">
+                    <div class="mermaid">
+                        graph TD
+                        A[Lookup Request] --> B{Check Base RMI}
+                        B -->|Found| C[Return Position]
+                        B -->|Not Found| D{Check Delta Buffer}
+                        D -->|Found| C
+                        D -->|Not Found| E[Key Not Found]
+
+                        F[Insert Request] --> G[Write to Delta Buffer]
+                        G --> H{Delta Buffer Full?}
+                        H -->|Yes| I[Merge into Base Array]
+                        I --> J[Retrain RMI]
+                        H -->|No| K[Done]
+                    </div>
+                    <figcaption>Figure 1: Lookup and insert path for the learned index. Lookups go through the two stage model to a bounded local search over the base array, falling back to the delta buffer if not found. Inserts land in the delta buffer and are periodically merged into the base array, triggering a full retrain.</figcaption>
+                </figure>
+                
+                <figure class="dev-article-figure">
+                    <div class="mermaid">
+                        graph LR
+                        A(64 bit Key) --> B[Stage 0 Model]
+                        B -->|Selects Model| C{Stage 1 Models}
+                        C --> D[Model 0]
+                        C --> E[Model 1]
+                        C --> F[...]
+                        C --> G[Model M 1]
+                        E -->|Predicts Position and Bound| H[Local Bounded Binary Search]
+                        H --> I(Position in Base Array)
+                    </div>
+                    <figcaption>Figure 1b: Two stage Recursive Model Index Architecture</figcaption>
+                </figure>
+
+                <h2>Methodology</h2>
+                <p><strong>Implementation.</strong> I developed all three structures and the benchmarking suite in C. The code relies solely on standard math libraries and was compiled with basic optimizations.</p>
+                <p><strong>Key distributions.</strong> I generated three distinct sets of synthetic 64 bit keys to simulate typical filesystem metadata.</p>
+                <ul>
+                    <li>Sequential keys consisted of monotonically increasing numbers to represent append only logs.</li>
+                    <li>Uniform keys were generated randomly and sorted, serving as an ideal proxy for hashed paths.</li>
+                    <li>Lognormal keys simulated real world skew where files cluster based on timestamps or sizes. Due to the high clustering in lognormal data, tests requiring five million unique keys reached their limit at roughly 2.86 million distinct values.</li>
+                </ul>
+                <p><strong>Lookup benchmark.</strong> I populated the indexes and executed 200,000 random point lookups per configuration. The test recorded the average nanoseconds required to locate a key across all three distributions and sizes ranging up to five million keys.</p>
+                <p><strong>Insert benchmark.</strong> I partitioned the keys, building the initial index with eighty percent of the data and streaming the remaining twenty percent as insertions. I carefully randomized the insertion order to avoid creating an artificially fast sequential append operation. I limited these tests to 200,000 keys because the baseline array performance degraded severely at larger sizes.</p>
+                <p><strong>Hardware.</strong> All experiments ran on a standard Linux container utilizing a single thread. The results provide a direct comparison of the structures on identical hardware rather than absolute performance metrics for production environments.</p>
+
+                <h2>Results</h2>
+                <h3>Lookup latency vs index size</h3>
+                <p>The learned index consistently outperformed the baselines, with the performance gap widening as the dataset expanded. At 10,000 keys, the learned index was more than twice as fast as the array. At five million keys, the learned index required 123.2 nanoseconds per lookup, making it roughly 3.4 times faster than the array and 4 times faster than the B+tree. A well trained model successfully replaces logarithmic searching with fast constant time arithmetic.</p>
+                <p>In certain scenarios, the B+tree performed slightly slower than the basic array. This likely stems from my chosen leaf capacity of 128 keys causing cache misses, rather than an inherent flaw in B+trees. A highly optimized library implementation would likely close this performance gap.</p>
+
+                <figure class="dev-article-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>N</th>
+                                <th>ns per lookup (array)</th>
+                                <th>ns per lookup (btree)</th>
+                                <th>ns per lookup (learned)</th>
+                                <th>index bytes (btree)</th>
+                                <th>index bytes (learned)</th>
+                                <th>mem. ratio (btree per learned)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>10,000</td><td>85.2</td><td>79.2</td><td>37.2</td><td>676,992</td><td>984</td><td>688x</td></tr>
+                            <tr><td>100,000</td><td>115.6</td><td>125.5</td><td>47.0</td><td>6,480,960</td><td>9,408</td><td>689x</td></tr>
+                            <tr><td>1,000,000</td><td>212.9</td><td>298.0</td><td>78.0</td><td>64,533,024</td><td>93,792</td><td>688x</td></tr>
+                            <tr><td>5,000,000</td><td>416.2</td><td>494.8</td><td>123.2</td><td>322,533,024</td><td>468,792</td><td>688x</td></tr>
+                        </tbody>
+                    </table>
+                    <figcaption>Table 1: Lookup latency and index memory, uniform distribution.</figcaption>
+                </figure>
+
+                <h3>Index memory overhead</h3>
+                <p>The memory efficiency represents the most significant advantage in this study. The learned index requires only a few floating point numbers for its models, whereas the B+tree must store extensive arrays of leaf and root pointers. The learned index consistently utilized almost 688 times less memory across all tested sizes.</p>
+
+                <h3>Insert cost</h3>
+                <p>At 200,000 keys, the basic array required 19.1 microseconds per insertion. The B+tree processed insertions natively in 2.78 microseconds. The learned index averaged just 1.14 microseconds per insertion. This impressive average occurs because most insertions drop quickly into the delta buffer. However, this average conceals the massive computational penalty incurred when the buffer fills and forces a complete model retrain.</p>
+
+                <h3>Lookup latency during sustained inserts</h3>
+                <p>I expected latency to spike significantly as the delta buffer filled. Surprisingly, performance remained relatively stable. Lookups hovered near 117 nanoseconds throughout the insertion stream, compared to 250 nanoseconds for the B+tree. The delta buffer successfully absorbed new data without allowing the main model error rate to degrade unacceptably.</p>
+
+                <h2>Discussion</h2>
+                <p>The data clearly demonstrates why researchers favor learned indexes. For read heavy workloads with relatively static data, a small mathematical model easily outperforms classic tree structures in both speed and memory efficiency. The drastically smaller memory footprint allows systems to retain more of the index in the CPU cache.</p>
+                <p>However, writing data introduces significant complications. The delta buffer effectively managed the average insertion cost, but the implementation is notably more complex than a standard B+tree split. Lookups must check two separate structures, and the entire system must halt periodically to retrain the models. Safely managing this retraining process in a highly concurrent production environment would present a formidable engineering challenge.</p>
+
+                <h2>Limitations and Threats to Validity</h2>
+                <p>This study includes several explicit limitations.</p>
+                <ul>
+                    <li><strong>In memory only.</strong> The system never interacted with physical storage drives or page caches. Real filesystem lookups are typically restricted by I/O limits, which this study does not measure.</li>
+                    <li><strong>Synthetic keys.</strong> The generated distributions serve as reasonable proxies but do not perfectly replicate real filesystem traces containing complex burst patterns.</li>
+                    <li><strong>Single threaded.</strong> The implementation lacks locks or mutexes. A production metadata layer must handle thousands of concurrent operations safely.</li>
+                    <li><strong>Simplified B+tree.</strong> The baseline B+tree implementation was relatively basic. A fully optimized library implementation would likely deliver superior performance.</li>
+                    <li><strong>Not a filesystem.</strong> This project solely evaluates a single index layer and does not represent a functional filesystem or provide crash recovery mechanisms.</li>
+                </ul>
+
+                <h2>Conclusion and Future Work</h2>
+                <p>I built three distinct key to position indexes to evaluate their performance on filesystem style lookups. The two stage learned index performed lookups four times faster than a standard array or B+tree while using nearly 700 times less memory. This performance advantage came at the expense of a vastly more complex insertion process. These findings strongly validate the established academic literature regarding learned indexes.</p>
+                <p>Future work should involve backing the index with mapped or direct I/O storage. Replacing the delta buffer with a true gapped array design would enable genuine in place insertions. Implementing robust concurrency control and testing the system against authentic filesystem traces remain critical next steps.</p>
+            </section>
+        </article>
+    </main>
+
+    <script src="assets/js/script.js" defer></script>
+</body>
+</html>

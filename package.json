@@ -2,7 +2,7 @@
   "name": "portfolio-website",
   "version": "1.0.0",
   "description": "A beautiful, responsive, gallery-style portfolio website showcasing creative work.",
-  "main": "grainient.js",
+  "main": "assets/js/grainient.js",
   "scripts": {
     "test": "playwright test"
   },
@@ -20,5 +20,15 @@
   "homepage": "https://github.com/sjanney/portfolio-website#readme",
   "devDependencies": {
     "@playwright/test": "^1.61.1"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "motion": "^12.23.26",
+    "playwright": "^1.61.1",
+    "playwright-core": "^1.61.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   }
 }

@@ -11,7 +11,7 @@
     <meta property="og:description" content="Get in touch with Shane Janney.">
     <meta property="og:type" content="website">
     <title>Shane Janney — Contact</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body>
@@ -21,10 +21,10 @@
     <!-- Navigation -->
     <nav class="nav" id="nav">
         <a href="index.html" class="nav-link" data-index="0">home</a>
-        <a href="construction.html" class="nav-link" data-index="1">bio</a>
+        <a href="bio.html" class="nav-link" data-index="1">bio</a>
         <a href="work.html" class="nav-link" data-index="2">work</a>
         <a href="contact.html" class="nav-link active" data-index="3">contact</a>
-        <a href="construction.html" class="nav-link" data-index="4">projects</a>
+        <a href="projects.html" class="nav-link" data-index="4">projects</a>
         <a href="dev-work.html" class="nav-link" data-index="5">dev work</a>
     </nav>
 
@@ -40,9 +40,14 @@
             <!-- Left Side: Contact Form -->
             <div class="contact-form-wrapper">
                 <h1 class="contact-title">get in touch</h1>
-                <p class="contact-subtitle">send a message or project inquiry directly.</p>
+                <p class="contact-subtitle" style="line-height: 1.6;">
+                    send a message or project inquiry directly.<br><br>
+                    email: <a href="mailto:shanej97809@gmail.com" style="text-decoration: underline; text-underline-offset: 2px;">shanej97809@gmail.com</a><br>
+                    ig (personal): <a href="https://instagram.com/shane_janney" target="_blank" style="text-decoration: underline; text-underline-offset: 2px;">@shane_janney</a><br>
+                    ig (business): <a href="https://instagram.com/mrcameraman._" target="_blank" style="text-decoration: underline; text-underline-offset: 2px;">@mrcameraman._</a>
+                </p>
 
-                <form id="contactForm" action="https://formspree.io/f/contact@shanejanney.com" method="POST" class="contact-form">
+                <form id="contactForm" action="https://formspree.io/f/shanej97809@gmail.com" method="POST" class="contact-form">
                     <div class="form-group">
                         <label for="contactName" class="form-label">name</label>
                         <input type="text" id="contactName" name="name" class="form-input" placeholder="your name" required autocomplete="name">
@@ -156,7 +161,7 @@
         </div>
     </main>
 
-    <script src="script.js" defer></script>
+    <script src="assets/js/script.js" defer></script>
 </body>
 
 </html>
