@@ -119,12 +119,16 @@
 
     async function fallbackLocation() {
         try {
-            const response = await fetch('https://ipapi.co/json/');
+            const response = await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client');
             const data = await response.json();
-            const city = data.city || '';
-            const region = data.region_code || data.region || '';
-            if (city && region) {
-                metaLocationEl.textContent = `${city}, ${region}`;
+            const city = data.city || data.locality || data.principalSubdivision || '';
+            const region = data.principalSubdivisionCode || data.principalSubdivision || '';
+            let regionShort = region;
+            if (region.includes('-')) {
+                regionShort = region.split('-').pop();
+            }
+            if (city && regionShort) {
+                metaLocationEl.textContent = `${city}, ${regionShort}`;
             } else if (city) {
                 metaLocationEl.textContent = city;
             } else {
