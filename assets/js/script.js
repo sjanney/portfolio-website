@@ -80,7 +80,44 @@
     const metaLocationEl = document.getElementById('metaLocation');
 
     async function fetchLocation() {
-        // IP-based geolocation (no browser permissions required)
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+                    try {
+                        const response = await fetch(
+                            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+                        );
+                        const data = await response.json();
+                        const city = data.city || data.locality || data.principalSubdivision || '';
+                        const region = data.principalSubdivisionCode || data.principalSubdivision || '';
+                        let regionShort = region;
+                        if (region.includes('-')) {
+                            regionShort = region.split('-').pop();
+                        }
+                        
+                        if (city && regionShort) {
+                            metaLocationEl.textContent = `${city}, ${regionShort}`;
+                        } else if (city) {
+                            metaLocationEl.textContent = city;
+                        } else {
+                            fallbackLocation();
+                        }
+                    } catch (err) {
+                        fallbackLocation();
+                    }
+                },
+                () => {
+                    fallbackLocation();
+                },
+                { timeout: 8000, maximumAge: 300000 }
+            );
+        } else {
+            fallbackLocation();
+        }
+    }
+
+    async function fallbackLocation() {
         try {
             const response = await fetch('https://ipapi.co/json/');
             const data = await response.json();
@@ -97,7 +134,7 @@
             metaLocationEl.textContent = 'location hidden';
         }
     }
-    fetchLocation(); // IP-based, no prompt
+    // fetchLocation(); // Deferred to custom popup logic
 
     // ========================================
     // CURSOR GLOW EFFECT
@@ -322,12 +359,17 @@
         
         if (hasPrompted === 'true') {
             // Already allowed
+            fetchLocation();
             if (document.getElementById('cardWebcam') && typeof window.initCamera === 'function') {
                 window.initCamera();
             }
         } else if (hasPrompted === 'false') {
-            // Previously denied via custom popup, do nothing
+            // Previously denied via custom popup, use IP fallback
+            fallbackLocation();
         } else {
+            // Initial load, use fallback quietly while waiting
+            fallbackLocation();
+            
             // Show custom popup after a short delay
             setTimeout(() => {
                 const popup = document.createElement('div');
@@ -335,7 +377,7 @@
                 popup.innerHTML = `
                     <div class="permission-content">
                         <h3>Enhance your experience</h3>
-                        <p>Allow access to your camera for the interactive reflective ID card?</p>
+                        <p>Allow access to location and camera for interactive features and precise local time?</p>
                         <div class="permission-actions">
                             <button class="btn-deny" id="btnDenyPerm">Not Now</button>
                             <button class="btn-allow" id="btnAllowPerm">Allow</button>
