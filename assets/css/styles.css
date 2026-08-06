@@ -177,6 +177,7 @@ a {
     object-position: center;
     display: block;
     transform: scale(1.05);
+    will-change: transform;
 }
 
 /* ========================================
@@ -249,7 +250,8 @@ a {
     background: radial-gradient(circle, rgba(214, 208, 196, 0.15) 0%, transparent 70%);
     pointer-events: none;
     z-index: 2;
-    transform: translate(-50%, -50%);
+    transform: translate3d(-50%, -50%, 0);
+    will-change: transform, opacity;
     opacity: 0;
     transition: opacity 0.5s ease;
     mix-blend-mode: soft-light;
@@ -411,6 +413,7 @@ a {
     overflow-y: auto;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
 }
 
 .snap-y-mandatory {
@@ -418,8 +421,8 @@ a {
 }
 
 .work-section {
-    height: 100vh;
-    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
     width: 100vw;
     scroll-snap-align: start;
     display: flex;
@@ -476,6 +479,16 @@ a {
     .work-caption {
         width: 100%;
         margin-bottom: 0;
+    }
+
+    .scroll-container {
+        scroll-snap-type: none;
+    }
+
+    .work-section {
+        min-height: auto;
+        padding-top: calc(var(--page-padding) + 5rem);
+        padding-bottom: 3rem;
     }
 }
 
@@ -678,10 +691,149 @@ a {
     margin: 0 auto;
 }
 
+.mobile-contact-card {
+    display: none;
+}
+
 @media (max-width: 768px) {
+    .contact-section {
+        align-items: flex-start;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 5.75rem);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
+    }
+
     .contact-grid {
         grid-template-columns: 1fr;
-        gap: 3rem;
+        gap: 1.5rem;
+    }
+
+    .mobile-contact-card {
+        display: flex;
+        flex-direction: column;
+        gap: 2.25rem;
+        min-height: 15rem;
+        padding: 1.25rem;
+        border-radius: 1.25rem;
+        color: #ffffff;
+        background: #171717;
+        box-shadow: 0 1rem 2.5rem rgba(26, 26, 26, 0.16);
+    }
+
+    .mobile-contact-card-top,
+    .mobile-contact-card-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .mobile-contact-kicker,
+    .mobile-contact-status,
+    .mobile-contact-card-bottom,
+    .mobile-contact-preview {
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .mobile-contact-kicker {
+        opacity: 0.58;
+    }
+
+    .mobile-contact-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: #b7f7c7;
+    }
+
+    .mobile-contact-status span {
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 50%;
+        background: #64d98a;
+        box-shadow: 0 0 0 0.2rem rgba(100, 217, 138, 0.12);
+    }
+
+    .mobile-contact-card-main {
+        display: grid;
+        gap: 0.65rem;
+    }
+
+    .mobile-contact-eyebrow {
+        margin: 0;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.58;
+    }
+
+    .mobile-contact-prompt {
+        max-width: 13ch;
+        margin: 0;
+        font-size: clamp(1.8rem, 9vw, 2.8rem);
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+    }
+
+    .mobile-contact-card-bottom {
+        align-items: flex-end;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .mobile-contact-card-bottom a {
+        max-width: 58%;
+        color: #ffffff;
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+        text-decoration: underline;
+        text-underline-offset: 0.2rem;
+        text-transform: none;
+    }
+
+    .mobile-contact-preview {
+        display: grid;
+        gap: 0.25rem;
+        max-width: 38%;
+        color: rgba(255, 255, 255, 0.58);
+        text-align: right;
+        overflow: hidden;
+    }
+
+    .mobile-contact-preview span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .contact-form-wrapper {
+        order: 2;
+        gap: 0.65rem;
+    }
+
+    .contact-form-wrapper .contact-subtitle {
+        margin-bottom: 0.75rem;
+    }
+
+    .contact-card-wrapper {
+        display: none;
+    }
+
+    .form-input {
+        min-height: 3.25rem;
+        padding: 0.9rem 1rem;
+        border-radius: 0.75rem;
+    }
+
+    .form-textarea {
+        min-height: 8rem;
+    }
+
+    .form-submit-btn {
+        min-height: 3.5rem;
+        margin-top: 0.25rem;
+        border-radius: 0.75rem;
     }
 }
 
@@ -1049,6 +1201,22 @@ a {
     }
 }
 
+@media (max-width: 768px) {
+    .contact-section {
+        align-items: flex-start;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 5.75rem);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
+    }
+
+    .contact-grid {
+        gap: 1.5rem;
+    }
+
+    .contact-card-wrapper {
+        display: none;
+    }
+}
+
 /* Card send success animation */
 @keyframes card-sent {
     0%   { transform: perspective(1000px) rotateY(0deg) scale(1); }
@@ -1244,9 +1412,9 @@ a {
 @media (max-width: 768px) {
     /* Nav: stack into a horizontal scroll or wrap nicely */
     .nav {
-        gap: 0.85rem;
+        gap: 0.45rem 0.85rem;
         flex-wrap: wrap;
-        max-width: 70%;
+        max-width: min(72vw, 22rem);
     }
 
     .nav-link {
@@ -1257,6 +1425,10 @@ a {
     .meta-info {
         top: calc(env(safe-area-inset-top, 0px) + var(--page-padding));
         right: calc(env(safe-area-inset-right, 0px) + var(--page-padding));
+    }
+
+    .hero-image {
+        object-position: 58% center;
     }
 
     /* Contact page */
@@ -1350,7 +1522,7 @@ a {
 @media (max-width: 480px) {
     .nav {
         gap: 0.5rem;
-        max-width: 65%;
+        max-width: 68vw;
     }
 
     .nav-link {
@@ -1445,6 +1617,38 @@ a {
     }
 }
 
+@media (hover: none), (pointer: coarse) {
+    .cursor-glow {
+        display: none;
+    }
+
+    .work-link:hover img,
+    .dev-link:hover {
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    .nav-link,
+    .meta-info,
+    .hero-image-container,
+    .name-line,
+    .hero-caption,
+    .work-content {
+        opacity: 1;
+        transform: none;
+    }
+}
+
 /* Very small phones (iPhone SE, etc.) */
 @media (max-width: 375px) {
     :root {
@@ -1453,7 +1657,7 @@ a {
 
     .nav {
         gap: 0.5rem;
-        max-width: 60%;
+        max-width: 72vw;
     }
 
     .nav-link {

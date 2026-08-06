@@ -119,4 +119,33 @@ test.describe('Portfolio Website Tests', () => {
     await expect(cardSubject).toHaveText('CUSTOM DESIGN WORK');
   });
 
+  test('Mobile layouts stay within the viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/work.html');
+
+    await expect(page.locator('.nav-link').first()).toBeVisible();
+    await expect(page.locator('.work-content').first()).toBeVisible();
+
+    const viewportHasNoHorizontalOverflow = await page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+    ));
+    expect(viewportHasNoHorizontalOverflow).toBe(true);
+  });
+
+  test('Mobile contact page uses the touch-first contact pass', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/contact.html');
+
+    await expect(page.locator('.mobile-contact-card')).toBeVisible();
+    await expect(page.locator('.contact-card-wrapper')).toBeHidden();
+
+    await page.fill('#contactName', 'Alex Doe');
+    await expect(page.locator('[data-mobile-preview="name"]')).toHaveText('alex doe');
+
+    const viewportHasNoHorizontalOverflow = await page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+    ));
+    expect(viewportHasNoHorizontalOverflow).toBe(true);
+  });
+
 });
