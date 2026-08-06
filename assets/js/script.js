@@ -68,7 +68,9 @@
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12 || 12;
-        metaTimeEl.textContent = `${hours}:${minutes} ${ampm}`;
+        if (metaTimeEl) {
+            metaTimeEl.textContent = `${hours}:${minutes} ${ampm}`;
+        }
     }
 
     updateTime();
@@ -80,6 +82,8 @@
     const metaLocationEl = document.getElementById('metaLocation');
 
     async function fetchLocation() {
+        if (!metaLocationEl) return;
+
         const cachedLocation = sessionStorage.getItem('userLocation');
         if (cachedLocation) {
             metaLocationEl.textContent = cachedLocation;
@@ -115,6 +119,8 @@
 
     // Only called on desktop if user clicks Allow in the custom popup
     async function fetchPreciseLocation() {
+        if (!metaLocationEl) return;
+
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -155,48 +161,49 @@
     // ========================================
     // CURSOR GLOW EFFECT
     // ========================================
-    const cursorGlow = document.createElement('div');
-    cursorGlow.classList.add('cursor-glow');
-    document.body.appendChild(cursorGlow);
-
-    let mouseX = 0, mouseY = 0;
-    let glowX = 0, glowY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        cursorGlow.classList.add('active');
-    });
-
-    document.addEventListener('mouseleave', () => {
-        cursorGlow.classList.remove('active');
-    });
-
-    function animateGlow() {
-        // Smooth follow with easing
-        glowX += (mouseX - glowX) * 0.08;
-        glowY += (mouseY - glowY) * 0.08;
-        cursorGlow.style.left = glowX + 'px';
-        cursorGlow.style.top = glowY + 'px';
-        requestAnimationFrame(animateGlow);
+    const cursorGlow = document.querySelector('.cursor-glow') || document.createElement('div');
+    if (!cursorGlow.parentNode) {
+        cursorGlow.classList.add('cursor-glow');
+        document.body.appendChild(cursorGlow);
     }
-    animateGlow();
 
-    // ========================================
-    // SUBTLE PARALLAX ON IMAGE
-    // ========================================
     const heroImage = document.getElementById('heroImage');
+    const canUsePointerEffects = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let pointerX = window.innerWidth / 2;
+    let pointerY = window.innerHeight / 2;
+    let glowX = pointerX;
+    let glowY = pointerY;
+    let pointerFrame = null;
 
-    if (document.getElementById('heroImageContainer') && heroImage) {
-        document.addEventListener('mousemove', (e) => {
-            const xPercent = (e.clientX / window.innerWidth - 0.5) * 2;
-            const yPercent = (e.clientY / window.innerHeight - 0.5) * 2;
+    function renderPointerEffects() {
+        pointerFrame = null;
+        glowX += (pointerX - glowX) * 0.12;
+        glowY += (pointerY - glowY) * 0.12;
+        cursorGlow.style.transform = `translate3d(${glowX}px, ${glowY}px, 0) translate(-50%, -50%)`;
 
-            requestAnimationFrame(() => {
-                // Scale up slightly (1.05) and use percentage translation to ensure edges never show
-                heroImage.style.transform = `scale(1.05) translate(${xPercent * -1.5}%, ${yPercent * -1.5}%)`;
-            });
-        });
+        if (heroImage && !prefersReducedMotion) {
+            const xPercent = (pointerX / window.innerWidth - 0.5) * -3;
+            const yPercent = (pointerY / window.innerHeight - 0.5) * -3;
+            heroImage.style.transform = `scale(1.05) translate3d(${xPercent}%, ${yPercent}%, 0)`;
+        }
+
+        if (Math.abs(pointerX - glowX) > 0.1 || Math.abs(pointerY - glowY) > 0.1) {
+            pointerFrame = requestAnimationFrame(renderPointerEffects);
+        }
+    }
+
+    if (canUsePointerEffects && !prefersReducedMotion) {
+        document.addEventListener('pointermove', (event) => {
+            pointerX = event.clientX;
+            pointerY = event.clientY;
+            cursorGlow.classList.add('active');
+            if (!pointerFrame) pointerFrame = requestAnimationFrame(renderPointerEffects);
+        }, { passive: true });
+
+        document.addEventListener('pointerleave', () => cursorGlow.classList.remove('active'));
+    } else {
+        cursorGlow.remove();
     }
 
     // ========================================
@@ -208,16 +215,20 @@
         threshold: 0.15
     };
 
-    const scrollObserver = new IntersectionObserver((entries) => {
+    const scrollObserver = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('in-view');
             }
         });
-    }, observerOptions);
+    }, observerOptions) : null;
 
     document.querySelectorAll('.work-content').forEach(section => {
-        scrollObserver.observe(section);
+        if (scrollObserver) {
+            scrollObserver.observe(section);
+        } else {
+            section.classList.add('in-view');
+        }
     });
 
     // ========================================
@@ -246,7 +257,8 @@
         };
 
         // 2. Interactive 3D Card Tilt Effect (subtle)
-        reflectiveCard.addEventListener('mousemove', (e) => {
+        reflectiveCard.addEventListener('pointermove', (e) => {
+            if (!canUsePointerEffects || prefersReducedMotion) return;
             const rect = reflectiveCard.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -256,7 +268,7 @@
             const rotateY = ((x - centerX) / centerX) * 5;
 
             reflectiveCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
-        });
+        }, { passive: true });
 
         reflectiveCard.addEventListener('mouseleave', () => {
             reflectiveCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';

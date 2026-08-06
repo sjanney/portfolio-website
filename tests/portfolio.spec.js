@@ -119,4 +119,17 @@ test.describe('Portfolio Website Tests', () => {
     await expect(cardSubject).toHaveText('CUSTOM DESIGN WORK');
   });
 
+  test('Mobile layouts stay within the viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/work.html');
+
+    await expect(page.locator('.nav-link').first()).toBeVisible();
+    await expect(page.locator('.work-content').first()).toBeVisible();
+
+    const viewportHasNoHorizontalOverflow = await page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+    ));
+    expect(viewportHasNoHorizontalOverflow).toBe(true);
+  });
+
 });
