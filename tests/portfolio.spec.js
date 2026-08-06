@@ -17,6 +17,15 @@ test.describe('Portfolio Website Tests', () => {
     await expect(heroImage).toBeVisible();
   });
 
+  test('Site uses the animated VHS favicon', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
+      'href',
+      'assets/images/vhs-tape.gif'
+    );
+  });
+
   test('Navigation to work page works correctly', async ({ page }) => {
     await page.goto('/');
     
@@ -30,6 +39,15 @@ test.describe('Portfolio Website Tests', () => {
     // Check that there are multiple scroll sections
     const sections = page.locator('.work-section');
     expect(await sections.count()).toBeGreaterThan(1);
+  });
+
+  test('Bio page includes the a16z College Fellow experience', async ({ page }) => {
+    await page.goto('/bio.html');
+
+    const fellowship = page.locator('.pglang-item').filter({ hasText: 'a16z College Fellow' });
+    await expect(fellowship).toHaveCount(1);
+    await expect(fellowship.locator('.pglang-date')).toHaveText('24-06-01');
+    await expect(fellowship.locator('img')).toHaveAttribute('src', 'assets/images/logos/a16z.png');
   });
 
   test('Work page has lazy loading and optimized webp images', async ({ page }) => {
