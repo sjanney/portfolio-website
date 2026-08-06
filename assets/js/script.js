@@ -283,10 +283,18 @@
         const cardName = document.getElementById('cardName');
         const cardEmail = document.getElementById('cardEmail');
         const cardSubject = document.getElementById('cardSubject');
+        const mobilePreviewName = document.querySelector('[data-mobile-preview="name"]');
+        const mobilePreviewSubject = document.querySelector('[data-mobile-preview="subject"]');
+
+        function syncPreview(element, value, fallback) {
+            if (element) element.textContent = value || fallback;
+        }
 
         if (nameInput && cardName) {
             nameInput.addEventListener('input', () => {
-                cardName.textContent = nameInput.value.trim() ? nameInput.value.toUpperCase() : 'YOUR NAME';
+                const value = nameInput.value.trim() ? nameInput.value.toUpperCase() : 'YOUR NAME';
+                syncPreview(cardName, value, 'YOUR NAME');
+                syncPreview(mobilePreviewName, value.toLowerCase(), 'your name');
             });
         }
 
@@ -298,14 +306,18 @@
 
         if (subjectInput && cardSubject) {
             subjectInput.addEventListener('input', () => {
-                cardSubject.textContent = subjectInput.value.trim() ? subjectInput.value.toUpperCase() : 'PROJECT INQUIRY';
+                const value = subjectInput.value.trim() ? subjectInput.value.toUpperCase() : 'PROJECT INQUIRY';
+                syncPreview(cardSubject, value, 'PROJECT INQUIRY');
+                syncPreview(mobilePreviewSubject, value.toLowerCase(), 'project inquiry');
             });
         }
 
         if (messageInput && cardSubject) {
             messageInput.addEventListener('input', () => {
                 if (!subjectInput.value.trim() && messageInput.value.trim()) {
-                    cardSubject.textContent = messageInput.value.trim().toUpperCase();
+                    const value = messageInput.value.trim().toUpperCase();
+                    syncPreview(cardSubject, value, 'PROJECT INQUIRY');
+                    syncPreview(mobilePreviewSubject, value.toLowerCase(), 'project inquiry');
                 }
             });
         }
