@@ -1,0 +1,18 @@
+{
+  "slug": "project-slug",
+  "title": "Project title",
+  "date": "MM/DD/YY",
+  "location": "Venue / City",
+  "assetDirectory": "assets/images/project-slug",
+  "galleryScript": "assets/js/project-slug-gallery.js",
+  "photos": [
+    "IMG_0001.jpeg",
+    "IMG_0002.jpeg"
+  ],
+  "layout": {
+    "desktopColumns": 5,
+    "mobileColumns": 2,
+    "thumbnailMode": "square-cover",
+    "lightboxMode": "natural-dimensions"
+  }
+}

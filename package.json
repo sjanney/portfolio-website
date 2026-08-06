@@ -5,7 +5,7 @@
   "main": "assets/js/grainient.js",
   "scripts": {
     "dev": "python3 -m http.server 8080",
-    "check:js": "node --check assets/js/script.js",
+    "check:js": "node --check assets/js/script.js && node --check assets/js/slawn-gallery.js",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:mobile": "playwright test -g \"Mobile layouts\"",

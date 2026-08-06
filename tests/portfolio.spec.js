@@ -61,7 +61,7 @@ test.describe('Portfolio Website Tests', () => {
     await expect(instagram).toHaveAttribute('href', 'https://instagram.com/shanejanney');
   });
 
-  test('Clicking a work section opens work detail page with centered text, under construction status, and GIF', async ({ page }) => {
+  test('Clicking the Slawn work section opens its photo gallery', async ({ page }) => {
     await page.goto('/work.html');
     
     // Click on the first work link
@@ -70,25 +70,48 @@ test.describe('Portfolio Website Tests', () => {
     // Verify URL navigation to work-detail.html
     await expect(page).toHaveURL(/.*work-detail\.html\?id=0/);
     
-    // Check title text is centered and visible
-    const detailTitle = page.locator('#detailTitle');
-    await expect(detailTitle).toBeVisible();
-    await expect(detailTitle).toHaveText('slawn on w14th street art gallery opening');
+    const gallery = page.locator('#slawnGallery');
+    await expect(gallery).toBeVisible();
+    await expect(page.locator('.slawn-gallery-title')).toHaveText('slawn on w14th street');
+    await expect(page.locator('.slawn-gallery-item')).toHaveCount(20);
+    await expect(page.locator('.slawn-gallery-back')).toHaveText('← back to work');
 
-    // Check 'page under construction' notice
-    const status = page.locator('.detail-status');
-    await expect(status).toBeVisible();
-    await expect(status).toHaveText('page under construction');
-    
-    // Check GIF exists and is visible at bottom
-    const gif = page.locator('.detail-gif');
-    await expect(gif).toBeVisible();
-    await expect(gif).toHaveAttribute('src', /.*via GIPHY-mkaYkiNW\.gif/);
+    const firstThumbnailIsSquare = await page.locator('.slawn-gallery-item').first().evaluate(element => {
+      const rect = element.getBoundingClientRect();
+      return Math.abs(rect.width - rect.height) < 1;
+    });
+    expect(firstThumbnailIsSquare).toBe(true);
 
-    // Check back link exists
-    const backLink = page.locator('.detail-back-link');
-    await expect(backLink).toBeVisible();
-    await expect(backLink).toHaveText('← back to work');
+    await page.locator('.slawn-gallery-item').first().click();
+    await expect(page.locator('.slawn-lightbox')).toHaveClass(/is-open/);
+    await expect(page.locator('.slawn-lightbox-image')).toBeVisible();
+  });
+
+  test('Slawn gallery stays usable on mobile', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/work-detail.html?id=0');
+
+    await expect(page.locator('.slawn-gallery')).toBeVisible();
+    await expect(page.locator('.slawn-gallery-item')).toHaveCount(20);
+    await expect(page.locator('.slawn-gallery-item').first().locator('img'))
+      .toHaveAttribute('loading', 'eager');
+
+    const viewportHasNoHorizontalOverflow = await page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+    ));
+    expect(viewportHasNoHorizontalOverflow).toBe(true);
+
+    await page.locator('.slawn-gallery-item').first().click();
+    await expect(page.locator('.slawn-lightbox')).toHaveClass(/is-open/);
+    await expect(page.locator('.slawn-lightbox-close')).toHaveCSS('min-width', '44px');
+  });
+
+  test('Other work detail pages retain the construction state', async ({ page }) => {
+    await page.goto('/work-detail.html?id=1');
+
+    await expect(page.locator('.detail-title')).toHaveText('beardown festival - redveil performance');
+    await expect(page.locator('.detail-status')).toHaveText('page under construction');
+    await expect(page.locator('.slawn-gallery')).toBeHidden();
   });
 
   test('Contact page navigation and ReflectiveCard live text sync works', async ({ page }) => {
@@ -146,6 +169,28 @@ test.describe('Portfolio Website Tests', () => {
       document.documentElement.scrollWidth <= window.innerWidth
     ));
     expect(viewportHasNoHorizontalOverflow).toBe(true);
+  });
+
+  test('Projects and dev work pages keep compact responsive layouts', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+
+    await page.goto('/projects.html');
+    await expect(page.locator('.projects-title')).toHaveText('projects');
+    await expect(page.locator('.project-item')).toHaveCount(2);
+
+    const projectsHaveNoOverflow = await page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+    ));
+    expect(projectsHaveNoOverflow).toBe(true);
+
+    await page.goto('/dev-work.html');
+    await expect(page.locator('.dev-link')).toBeVisible();
+    await expect(page.locator('.dev-item-arrow')).toHaveText('↗');
+
+    const devWorkHasNoOverflow = await page.evaluate(() => (
+      document.documentElement.scrollWidth <= window.innerWidth
+    ));
+    expect(devWorkHasNoOverflow).toBe(true);
   });
 
 });

@@ -29,6 +29,14 @@ npm run check
 
 The local server runs at `http://localhost:8080`. Playwright starts its own server during tests.
 
+## Reusable photo galleries
+
+- Start from `templates/photo-gallery.config.json` and `templates/photo-gallery.checklist.md` when adding a project gallery.
+- Keep source photos outside the repository, then copy optimized JPEGs into `assets/images/<gallery-slug>/`.
+- Use FFmpeg for optimization; avoid macOS `sips`, which has previously produced invalid black gallery copies in this project.
+- Add the filenames to the page-specific gallery script, bump its image cache version, and update the gallery count assertion in `tests/portfolio.spec.js`.
+- Preserve the interaction pattern: square `object-fit: cover` thumbnails, a click-to-open lightbox with natural image proportions, lazy loading, and reduced-motion support.
+
 ## Before handoff
 
 - Run `npm run check`.

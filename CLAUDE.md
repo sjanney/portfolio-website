@@ -10,3 +10,5 @@ npm run check
 ```
 
 Keep changes focused, preserve the framework-free architecture, and update `tests/portfolio.spec.js` when behavior changes.
+
+For photo-based project pages, use `templates/photo-gallery.config.json` as the starting shape and follow `templates/photo-gallery.checklist.md`. The Slawn gallery is the reference implementation: optimized assets live under `assets/images/slawn/`, filenames are listed in `assets/js/slawn-gallery.js`, and thumbnail/lightbox behavior is shared through `assets/css/styles.css`.

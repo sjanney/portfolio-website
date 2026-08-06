@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body>
+<body class="work-detail-page">
     <!-- Cursor glow overlay -->
     <div class="cursor-glow" id="cursorGlow"></div>
 
@@ -29,6 +29,21 @@
         <div class="meta-location" id="metaLocation">locating...</div>
     </div>
 
+    <!-- Slawn Gallery -->
+    <main class="slawn-gallery" id="slawnGallery" hidden>
+        <header class="slawn-gallery-header">
+            <div>
+                <span class="detail-date">04/17/24</span>
+                <h1 class="slawn-gallery-title">slawn on w14th street</h1>
+            </div>
+            <p class="slawn-gallery-intro">gallery opening / new york</p>
+        </header>
+
+        <div class="slawn-gallery-grid" id="slawnGalleryGrid" aria-label="Slawn gallery photos"></div>
+
+        <a href="work.html" class="slawn-gallery-back">← back to work</a>
+    </main>
+
     <!-- Main Detail Section -->
     <main class="detail-container">
         <div class="detail-content">
@@ -44,6 +59,7 @@
     </main>
 
     <script src="assets/js/script.js" defer></script>
+    <script src="assets/js/slawn-gallery.js" defer></script>
     <script>
         const workItems = [
             {

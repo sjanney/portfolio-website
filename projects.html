@@ -11,15 +11,22 @@
     
     <style>
         .projects-content {
-            padding-top: 6rem;
-            max-width: 1200px;
+            padding-top: 7rem;
+            padding-bottom: 4rem;
+            max-width: 1120px;
             margin: 0 auto;
             padding-left: 2rem;
             padding-right: 2rem;
         }
         
         .projects-header {
-            margin-bottom: 4rem;
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.12);
         }
         
         .projects-title {
@@ -30,15 +37,34 @@
         
         .projects-subtitle {
             color: var(--text-secondary);
-            font-size: 1.15rem;
+            max-width: 20rem;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            text-align: right;
         }
         
         .project-item {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 3rem;
             align-items: center;
-            margin-bottom: 6rem;
+            min-height: 30rem;
+            margin-bottom: 3.5rem;
+            padding: 0 0 3.5rem;
+            border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+        }
+
+        .project-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-index {
+            display: block;
+            margin-bottom: 1.25rem;
+            color: var(--text-caption);
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
         
         .project-info h2 {
@@ -48,10 +74,11 @@
         }
         
         .project-info p {
-            font-size: 1.15rem;
-            line-height: 1.6;
+            max-width: 31rem;
+            font-size: 1rem;
+            line-height: 1.55;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.85rem;
         }
         
         .project-meta {
@@ -59,24 +86,47 @@
             color: #888;
             border-left: 2px solid #ddd;
             padding-left: 1rem;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
+            line-height: 1.6;
         }
         
         .project-stack-container {
             width: 100%;
             max-width: 550px;
-            height: 650px;
+            height: 430px;
             margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-video {
+            width: 100%;
+            max-height: 430px;
+            border-radius: 1.25rem;
+            object-fit: contain;
+            box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.1);
         }
 
         @media (max-width: 768px) {
             .project-item {
                 grid-template-columns: 1fr;
                 gap: 2rem;
+                min-height: 0;
+                margin-bottom: 2.5rem;
+                padding-bottom: 2.5rem;
             }
             .project-stack-container {
-                height: 400px;
+                height: 300px;
                 order: -1; /* Image stack above text on mobile */
+            }
+            .projects-header {
+                display: block;
+                margin-bottom: 2.25rem;
+            }
+            .projects-subtitle {
+                margin-top: 0.65rem;
+                text-align: left;
             }
             .projects-title {
                 font-size: 1.75rem;
@@ -91,8 +141,22 @@
         }
         
         @media (max-width: 480px) {
+            .projects-content {
+                padding-top: 5.5rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
             .project-stack-container {
-                height: 350px;
+                height: 250px;
+            }
+
+            .project-info h2 {
+                font-size: 1.35rem;
+            }
+
+            .project-info p {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -123,6 +187,7 @@
             
             <article class="project-item">
                 <div class="project-info">
+                    <span class="project-index">01 / venture</span>
                     <h2>Chord</h2>
                     <p>
                         A stealth-startup application designed to let people share and discover music purely through personal connections. 
@@ -141,6 +206,7 @@
             
             <article class="project-item">
                 <div class="project-info">
+                    <span class="project-index">02 / venture</span>
                     <h2><a href="https://stem-kappa.vercel.app/" target="_blank" style="text-decoration: underline; text-underline-offset: 2px; color: inherit;">stem ↗</a></h2>
                     <p>
                         A visual design research tool for creatives. 
@@ -154,8 +220,8 @@
                     </div>
                 </div>
                 
-                <div class="project-stack-container" style="display: flex; align-items: center; justify-content: center; height: auto;">
-                    <video src="stem_teaser.mp4" autoplay loop muted playsinline style="width: 100%; border-radius: 1.5rem; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"></video>
+                <div class="project-stack-container">
+                    <video class="project-video" src="stem_teaser.mp4" autoplay loop muted playsinline></video>
                 </div>
             </article>
         </div>
