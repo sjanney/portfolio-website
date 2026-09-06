@@ -34,7 +34,7 @@ test.describe('Portfolio Website Tests', () => {
     
     // Wait for navigation
     await expect(page).toHaveURL(/.*work\.html/);
-    await expect(page).toHaveTitle('Shane Janney — Work');
+    await expect(page).toHaveTitle('Shane Janney — Creative Work');
     
     // Check that there are multiple scroll sections
     const sections = page.locator('.work-section');
@@ -63,20 +63,15 @@ test.describe('Portfolio Website Tests', () => {
     await expect(secondImage).toHaveAttribute('loading', 'lazy');
   });
 
-  test('Footer Grainient renders correctly', async ({ page }) => {
+  test('Creative work sections link to their detail pages', async ({ page }) => {
     await page.goto('/work.html');
     
-    // Check if footer element exists
-    const footer = page.locator('.footer-section');
-    await expect(footer).toBeVisible();
-    
-    // Ensure the webgl canvas was attached
-    const canvas = page.locator('#footerGrainient canvas');
-    await expect(canvas).toBeAttached();
-    
-    // Ensure contact links exist
-    const instagram = page.getByRole('link', { name: '@shanejanney', exact: true });
-    await expect(instagram).toHaveAttribute('href', 'https://instagram.com/shanejanney');
+    // The current creative-work page is a four-project gallery, without a footer canvas.
+    await expect(page.locator('.work-link')).toHaveCount(4);
+    for (let index = 0; index < 4; index++) {
+      await expect(page.locator('.work-link').nth(index)).toHaveAttribute('href', `work-detail.html?id=${index}`);
+      await expect(page.locator('.work-link').nth(index).locator('img')).toHaveAttribute('alt', /\S+/);
+    }
   });
 
   test('Clicking the Slawn work section opens its photo gallery', async ({ page }) => {
@@ -202,8 +197,9 @@ test.describe('Portfolio Website Tests', () => {
     expect(projectsHaveNoOverflow).toBe(true);
 
     await page.goto('/dev-work.html');
-    await expect(page.locator('.dev-link')).toBeVisible();
-    await expect(page.locator('.dev-item-arrow')).toHaveText('↗');
+    await expect(page.locator('.dev-link')).toHaveCount(2);
+    await expect(page.locator('.dev-link').first()).toBeVisible();
+    await expect(page.locator('.dev-item-arrow')).toHaveText(['↗', '↗']);
 
     const devWorkHasNoOverflow = await page.evaluate(() => (
       document.documentElement.scrollWidth <= window.innerWidth

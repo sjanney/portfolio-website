@@ -1,0 +1,29 @@
+R,patch_loop,patch_type,effect_metric,n_pairs,n_shift_pairs,mean_effect,median_effect,effect_ci_lower,effect_ci_upper,n_eligible_recipients,n_flip_pairs,flip_rate,flip_ci_lower,flip_ci_upper,zero_event_rule_of_three_upper,n_strict_eligible_recipients,n_strict_flip_pairs,strict_flip_rate,strict_flip_ci_lower,strict_flip_ci_upper,mean_sham_max_score_difference,status
+32,1,counterfactual_donor,donor_logit_shift,24,24,0.0006510416666666666,0.0,-0.011067708333333334,0.011735026041666577,24,24,0.0,0.0,0.14247359772252563,0.125,0,0,,,,,ok
+32,1,same_answer_matched_contrast,donor_logit_shift,13,0,,,,,0,0,,,,,0,0,,,,,no defined target-margin effect for this control
+32,1,sham,max_abs_valid_answer_score_difference,24,24,0.0,0.0,0.0,0.0,0,0,,,,,0,0,,,,0.0,ok
+32,1,unrelated_donor,donor_logit_shift,24,21,0.002232142857142857,0.0,-0.012648809523809524,0.01636904761904762,13,13,0.0,0.0,0.24705263800047098,0.23076923076923078,0,0,,,,,ok
+32,2,counterfactual_donor,donor_logit_shift,24,24,0.001953125,0.0,-0.007161458333333333,0.01171875,24,24,0.0,0.0,0.14247359772252563,0.125,0,0,,,,,ok
+32,2,same_answer_matched_contrast,donor_logit_shift,13,0,,,,,0,0,,,,,0,0,,,,,no defined target-margin effect for this control
+32,2,sham,max_abs_valid_answer_score_difference,24,24,0.0,0.0,0.0,0.0,0,0,,,,,0,0,,,,0.0,ok
+32,2,unrelated_donor,donor_logit_shift,24,21,0.003720238095238095,0.0,-0.008928571428571428,0.01636904761904762,13,13,0.07692307692307693,0.0019456284973467497,0.3602974352678774,,0,0,,,,,ok
+32,4,counterfactual_donor,donor_logit_shift,24,24,0.004557291666666667,0.0,-0.006510416666666667,0.013688151041666577,24,24,0.0,0.0,0.14247359772252563,0.125,0,0,,,,,ok
+32,4,same_answer_matched_contrast,donor_logit_shift,13,0,,,,,0,0,,,,,0,0,,,,,no defined target-margin effect for this control
+32,4,sham,max_abs_valid_answer_score_difference,24,24,0.0,0.0,0.0,0.0,0,0,,,,,0,0,,,,0.0,ok
+32,4,unrelated_donor,donor_logit_shift,24,21,0.009672619047619048,0.0,-0.002232142857142857,0.021577380952380952,13,13,0.07692307692307693,0.0019456284973467497,0.3602974352678774,,0,0,,,,,ok
+32,8,counterfactual_donor,donor_logit_shift,24,24,0.005208333333333333,0.0,-0.001953125,0.013020833333333334,24,24,0.0,0.0,0.14247359772252563,0.125,0,0,,,,,ok
+32,8,same_answer_matched_contrast,donor_logit_shift,13,0,,,,,0,0,,,,,0,0,,,,,no defined target-margin effect for this control
+32,8,sham,max_abs_valid_answer_score_difference,24,24,0.0,0.0,0.0,0.0,0,0,,,,,0,0,,,,0.0,ok
+32,8,unrelated_donor,donor_logit_shift,24,21,0.014136904761904762,0.0,-0.004464285714285714,0.03273809523809524,13,13,0.0,0.0,0.24705263800047098,0.23076923076923078,0,0,,,,,ok
+32,16,counterfactual_donor,donor_logit_shift,24,24,0.001953125,0.0,-0.009130859374999972,0.014322916666666666,24,24,0.0,0.0,0.14247359772252563,0.125,0,0,,,,,ok
+32,16,same_answer_matched_contrast,donor_logit_shift,13,0,,,,,0,0,,,,,0,0,,,,,no defined target-margin effect for this control
+32,16,sham,max_abs_valid_answer_score_difference,24,24,0.0,0.0,0.0,0.0,0,0,,,,,0,0,,,,0.0,ok
+32,16,unrelated_donor,donor_logit_shift,24,21,-0.00818452380952381,0.0,-0.024553571428571428,0.006696428571428571,13,13,0.07692307692307693,0.0019456284973467497,0.3602974352678774,,0,0,,,,,ok
+32,24,counterfactual_donor,donor_logit_shift,24,24,0.009114583333333334,0.015625,-0.001953125,0.020833333333333332,24,24,0.0,0.0,0.14247359772252563,0.125,0,0,,,,,ok
+32,24,same_answer_matched_contrast,donor_logit_shift,13,0,,,,,0,0,,,,,0,0,,,,,no defined target-margin effect for this control
+32,24,sham,max_abs_valid_answer_score_difference,24,24,0.0,0.0,0.0,0.0,0,0,,,,,0,0,,,,0.0,ok
+32,24,unrelated_donor,donor_logit_shift,24,21,-0.002976190476190476,0.0,-0.01711309523809524,0.011160714285714286,13,13,0.0,0.0,0.24705263800047098,0.23076923076923078,0,0,,,,,ok
+32,32,counterfactual_donor,donor_logit_shift,24,24,0.017578125,-0.015625,-0.021484375,0.057942708333333336,24,24,0.0,0.0,0.14247359772252563,0.125,0,0,,,,,ok
+32,32,same_answer_matched_contrast,donor_logit_shift,13,0,,,,,0,0,,,,,0,0,,,,,no defined target-margin effect for this control
+32,32,sham,max_abs_valid_answer_score_difference,24,24,0.0,0.0,0.0,0.0,0,0,,,,,0,0,,,,0.0,ok
+32,32,unrelated_donor,donor_logit_shift,24,21,0.004464285714285714,-0.03125,-0.04092261904761905,0.05731026785714275,13,13,0.23076923076923078,0.05038107349115152,0.538131539234041,,0,0,,,,,ok

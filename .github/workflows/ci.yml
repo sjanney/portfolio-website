@@ -2,9 +2,9 @@ name: Site checks
 
 on:
   push:
-    branches: [master, agent/**]
+    branches: [main, master, agent/**]
   pull_request:
-    branches: [master]
+    branches: [main, master]
 
 permissions:
   contents: read

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="A hands-on study of Huginn’s recurrent states: probing, text monitoring, and activation patching. Research and interactive results by Shane Janney.">
+  <title>Looking Inside a Language Model, One Loop at a Time — Shane Janney</title>
+  <link rel="icon" type="image/gif" href="assets/images/vhs-tape.gif">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/huginn.css">
+  <script src="assets/js/script.js" defer></script>
+  <script src="assets/js/huginn.js" defer></script>
+</head>
+<body class="dev-article-page huginn-page">
+  <a class="skip-link" href="#article">Skip to article</a>
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <a class="nav-link visible" href="index.html">home</a><a class="nav-link visible" href="bio.html">bio</a><a class="nav-link visible" href="work.html">creative work</a><a class="nav-link visible" href="contact.html">contact</a><a class="nav-link visible" href="projects.html">projects</a><a class="nav-link visible" href="dev-work.html" aria-current="page">dev work</a>
+  </nav>
+  <div class="meta-info" id="metaInfo"><div class="meta-time" id="metaTime">--:-- --</div><div class="meta-location" id="metaLocation">locating...</div></div>
+  <main class="dev-article-container" id="article">
+    <article class="dev-article">
+      <header class="dev-article-header">
+        <a class="back-link" href="dev-work.html">← back to dev work</a>
+        <h1>Looking Inside a Language Model, One Loop at a Time</h1>
+        <div class="dev-article-meta"><span>Shane Janney</span><span>September 2026</span></div>
+        <div class="paper-links"><a href="assets/research/huginn/paper.pdf">Read the paper <span aria-hidden="true">↗</span></a><a href="#trajectory">Explore the results <span aria-hidden="true">↓</span></a></div>
+      </header>
+      <section class="dev-article-abstract" aria-label="Introduction">
+        <p>I wanted to see whether I could learn more about a model’s answer by inspecting its internal states than by asking it for an explanation. I used Huginn for this because it lets me change how many times it runs its recurrent block before producing a token. I could compare runs with different amounts of computation while keeping the model itself fixed.</p>
+        <p>I gave it a set of rule-following problems and trained small classifiers to identify which rule applied. Those classifiers did much better with the later internal states than with the written explanations. But Huginn’s own answers were still around chance. I also tried swapping states between problems, and didn’t find a clear effect on its answers. Here’s the setup, the results, and why I’m being careful about how I interpret them.</p>
+      </section>
+      <nav class="article-contents" aria-label="Article sections"><a href="#background">Background</a><a href="#method">The setup</a><a href="#trajectory">Results</a><a href="#patching">Patching</a><a href="#limits">Limitations</a><a href="#resources">Paper &amp; data</a></nav>
+      <section id="background">
+        <h2>What are we looking at, exactly?</h2>
+        <p>A language model takes text and predicts what should come next. It breaks the text into <strong>tokens</strong>, which can be words, parts of words, or punctuation, and represents them as lists of numbers. A neural network transforms those numbers through a series of calculations. At the end, the model assigns scores to possible next tokens.</p>
+        <p>Two kinds of numbers matter here. The <strong>weights</strong> are the parameters learned during training. They determine how the network processes its input. The <strong>activations</strong> are the values produced as a particular input passes through it. Different prompts produce different activations even when the weights stay fixed.</p>
+        <p>Those activations are what I inspect in this project. They aren’t sentences we can just read, and individual numbers don’t usually come with a neat meaning. I need a test that asks whether they contain information about something specific.</p>
+        <h2>Why an explanation isn’t enough</h2>
+        <p>Asking a model to explain its answer gives us another piece of generated text. That explanation might be useful, but we can’t assume it lists the factors that caused the answer. To check that, I compare three things: what the model says, what a classifier can extract from its internal states, and what happens when I intervene on those states.</p>
+        <p>This is part of <strong>mechanistic interpretability</strong>: trying to understand a model by examining and testing its internal computation. My experiment addresses a small part of that problem. I’m tracking one known label in a controlled task, not trying to translate the model’s entire internal state into English.</p>
+        <h2>How a recurrent network works</h2>
+        <p>A recurrent network feeds an updated state back into the same computation. The state changes with each pass, while the weights remain fixed. You can think of the state as the numbers the network carries forward from the previous pass.</p>
+        <p>The walkthrough below follows a prompt through Huginn’s main components. Watch the highlighted block: the computation returns to the same core several times before moving on to the output. The captions explain what each part does.</p>
+        <figure class="dev-article-figure model-walkthrough" aria-labelledby="walkthrough-title">
+          <div class="figure-heading"><h3 id="walkthrough-title">One token, from input to output</h3><span>Huginn · simplified architecture</span></div>
+          <div class="model-structure" role="group" aria-label="Prompt to prelude to recurrent core to coda to next token">
+            <div class="model-block" data-model-stage="prompt"><span class="model-symbol" aria-hidden="true">Aa</span><strong>Prompt</strong><small>Text → tokens</small></div>
+            <div class="model-block" data-model-stage="prelude"><span class="model-symbol" aria-hidden="true">[ e ]</span><strong>Prelude</strong><small>Represent the input</small></div>
+            <div class="model-block model-core" data-model-stage="core"><span class="model-symbol model-cycle" aria-hidden="true">↻</span><strong>Shared core</strong><small id="model-loop">Update the state</small><span class="model-seed">Initial state h₀</span></div>
+            <div class="model-block" data-model-stage="coda"><span class="model-symbol" aria-hidden="true">[ z ]</span><strong>Coda</strong><small>Read the final state</small></div>
+            <div class="model-block" data-model-stage="output"><span class="model-symbol" aria-hidden="true">→</span><strong>Next token</strong><small>Score possible tokens</small></div>
+          </div>
+          <div class="model-caption" aria-live="polite"><strong id="model-stage-title">Start with the prompt</strong><p id="model-stage-description">The text is split into tokens so the model can process it numerically.</p></div>
+          <div class="model-controls"><button id="model-play" type="button" disabled>Play walkthrough</button><button id="model-next" type="button" disabled>Next step →</button><span id="model-progress">1 / 9</span></div>
+          <figcaption>A structural animation, not a live model run or a visualization of measured activations. It shows four recurrent passes for clarity. The prompt representation is available to the core on every pass; the model weights stay fixed. Reduced-motion users can advance with Next step.</figcaption>
+        </figure>
+      </section>
+      <section id="why-huginn">
+        <h2>Why I used Huginn</h2>
+        <p>Huginn lets me change the number of passes through that shared core while leaving its weights alone. That differs from a traditional sequence RNN, which often updates its state as it reads successive tokens. Here I’m changing the number of internal passes before the next token is produced.</p>
+        <p>Huginn feeds a hidden state through a transformer core, then feeds the result back through the same core. Each pass updates the state without changing the weights. For this experiment I used 4, 8, 16, and 32 passes, and saved the states along the way.</p>
+        <p>If you’re reading the equation below, <em>e</em> is the prompt representation, <em>h</em> is the internal state, and G is the core doing the update. θ is the set of model weights. After the last pass, a decoder turns the state into scores for the next token.</p>
+        <div class="formula" role="math" aria-label="The state at loop k equals the shared core applied to the previous state and prompt representation">h<sub>k</sub> = G<sub>θ</sub>(h<sub>k−1</sub>, e)</div>
+        <p>To read these states, I trained a <strong>probe</strong>: a small classifier that takes an activation vector and predicts a label. That’s worth spelling out because the probe and Huginn aren’t doing the same job. My classifier might find information that helps it predict the label even if Huginn ignores that information when answering.</p>
+        <p>I used activation patching to check whether changing a state would affect the answer. In practice, that meant saving a state from one problem, inserting it into another run, and letting the model continue.</p>
+        <p>So there are two separate questions throughout this page. <strong>Can the probe identify the right rule?</strong> And <strong>does that information affect Huginn’s answer?</strong> A good result on the first question doesn’t settle the second.</p>
+      </section>
+      <section id="method">
+        <h2>Building the task</h2>
+        <p>I generated 500 policy problems, grouped into 250 pairs. Each has a base rule and an exception. The base rule gives an allow-or-deny decision. To find out whether the exception applies, the model has to follow a chain of relationships and check a property at the end. If it applies, the answer reverses.</p>
+        <p>I know which rule should determine each answer because I generated the problems. That gives me the label for the probes: <strong>base rule or exception</strong>. I also made sure each label appears equally often with “allow” and “deny.” Otherwise, a classifier could get credit for recognizing the answer without telling me anything about which rule applied.</p>
+        <figure class="dev-article-figure policy-demo">
+          <div class="figure-heading"><h3>Try a simplified policy</h3><span>Illustration, not a model run</span></div>
+          <p>A badge grants entry. An active exception at the chain’s endpoint reverses that decision.</p>
+          <div class="policy-controls"><label><input id="badge" type="checkbox" checked> Person has a badge</label><label><input id="exception" type="checkbox"> Endpoint exception is active</label></div>
+          <div class="chain" aria-label="Illustrative two-hop relation chain"><span>Person</span><span aria-hidden="true">→</span><span>Team</span><span aria-hidden="true">→</span><span>Endpoint</span></div>
+          <div class="policy-result" aria-live="polite"><div><span>Decision path</span><strong id="policy-path">Base rule</strong></div><div><span>Final answer</span><strong id="policy-answer">Allow</strong></div></div>
+          <figcaption>Try switching both boxes: you can get back to “allow” while changing which rule determines it. This simplified example illustrates the task logic; it isn’t a model prediction or a record from the dataset.</figcaption>
+        </figure>
+        <p>I used 350 examples for training, 76 for validation, and kept 74 for testing. For each run, I saved the answer scores and generated explanation, plus the last prompt token’s state after every loop. The runs use the same seed for a given example: the first four loops of its 32-loop run match its four-loop run.</p>
+        <p>The split keeps the final evaluation separate from the examples used to fit or tune the classifiers. The validation set helps choose a configuration; the test set checks how that choice performs on held-out problems. With only 74 test examples, a few different predictions can noticeably change the score.</p>
+        <p>Here’s what I ran on those saved outputs:</p>
+        <ol><li><strong>Internal-state probes.</strong> Regularized logistic classifiers predict the path label from hidden states. I also probe the pre-recurrence representation and randomly initialized loop-0 state as baselines.</li><li><strong>Text monitors.</strong> TF–IDF features and a frozen MiniLM encoder provide two ways to read the generated rationale. Every line containing <code>FINAL:</code> is removed before monitoring.</li><li><strong>Activation patching.</strong> A recipient receives an internal state from a paired counterfactual donor. I then measure the change in its answer scores and whether its choice flips toward the donor.</li></ol>
+        <details class="technical-note"><summary>A few terms used in the tests</summary><p><strong>Logistic classifier:</strong> a small model that combines its input values with learned weights to predict one of two labels. <strong>Regularization:</strong> a constraint that discourages large weights and helps limit overfitting to the training examples.</p><p><strong>TF–IDF:</strong> represents text using how often words appear, with less emphasis on words common across documents. <strong>MiniLM:</strong> a pretrained text encoder that converts an explanation into a numerical representation. “Frozen” means I don’t change that encoder’s weights; I fit a classifier on its outputs.</p><p><strong>Rationale:</strong> the explanation I ask Huginn to generate. <strong>Counterfactual pair:</strong> two related problems where a controlled change alters which rule or answer applies.</p></details>
+        <p>There is training involved here, but it’s only for the small monitoring classifiers, not Huginn. I choose the probe’s regularization setting using the validation set, refit that configuration on the training and validation examples together, and evaluate it on the held-out test set.</p>
+      </section>
+      <section id="trajectory">
+        <h2>The probe results</h2>
+        <p>The first thing I checked was whether I could already recover the label before the recurrent core did any work. The probe on the prompt’s prelude representation scored 50.0% balanced accuracy; the probe on the initialized state scored 47.3%. Neither result distinguishes itself from chance.</p>
+        <p>In the 32-loop run, the scores start climbing around loops 9–12. At loop 16 the probe gets <strong>91.9% balanced accuracy</strong>, and the highest score is 94.6% at loop 18. It finishes at 86.5%. I’ve plotted all the loops below, including the uncertainty intervals, so you can see the variation rather than just the best score.</p>
+        <p><strong>Balanced accuracy</strong> gives the two labels equal weight. A classifier that always picks the same label scores 50%, our chance reference. The shaded band shows a 95% bootstrap interval: I repeatedly resample the test examples and recalculate the score to estimate how sensitive it is to the sample. It doesn’t account for every source of uncertainty, such as changing the dataset or model.</p>
+        <figure class="dev-article-figure trajectory-figure">
+          <div class="figure-heading"><h3>Path-label decodability by loop</h3><span>R = 32 · 74 test examples</span></div>
+          <div class="legend"><span><i class="swatch green"></i>Linear probe</span><span><i class="swatch band"></i>95% interval</span><span><i class="swatch dashed"></i>Chance</span></div>
+          <div id="trajectory-chart" class="chart-host"><p class="data-status">48.6% at loop 1 → 94.6% at loop 18 → 86.5% at loop 32.</p></div>
+          <div class="slider-label"><label for="loop-slider">Inspect a loop</label><output id="loop-number" for="loop-slider">Loop 16 / 32</output></div>
+          <input id="loop-slider" type="range" min="1" max="32" value="16" disabled>
+          <div class="chart-readout" aria-live="polite"><strong id="loop-score">91.9%</strong><div><span>balanced accuracy</span><span id="loop-ci">95% interval: 85.0–97.4%</span></div></div>
+          <p id="loop-context" class="readout-note">Late states make the path label easier for a linear probe to recover.</p>
+          <figcaption>Figure 1. Drag the slider to inspect the saved measurements. Shading shows the original example-level bootstrap intervals (2,000 resamples), not pair-clustered uncertainty. The apparent transition is exploratory. <a href="assets/research/huginn/probe_by_loop.csv" download>Source CSV ↗</a></figcaption>
+        </figure>
+        <details class="technical-note"><summary>How to read balanced accuracy</summary><p>Balanced accuracy averages recall for the two labels: BA = ½(recall<sub>base</sub> + recall<sub>exception</sub>). A constant classifier scores 50%. Here it measures how well an external probe identifies the decision path—not how often Huginn answers the policy question correctly.</p></details>
+      </section>
+      <section id="monitors">
+        <h2>Checking the written explanations</h2>
+        <p>The classifiers trained on the explanations didn’t do nearly as well. At 16 and 32 passes, both trail the internal-state probe. Their 95% intervals include chance at all four depths.</p>
+        <p>I put Huginn’s own task accuracy underneath the monitor scores because it’s easy to confuse the two. The probe identifying the correct rule 91.9% of the time doesn’t mean Huginn answered 91.9% of the problems correctly. At 16 passes, its task accuracy was 50.0%.</p>
+        <p>The bars compare monitors on the same examples within each depth. At shallow depths, some runs don’t produce a usable nonempty explanation, so fewer examples qualify for that comparison. The task-accuracy number still uses all 74 test examples.</p>
+        <figure class="dev-article-figure">
+          <div class="figure-heading"><h3>States, text, and task performance</h3><span>Measured results</span></div>
+          <div class="depth-controls" role="group" aria-label="Total recurrence depth"><span>Recurrent passes</span><button type="button" data-depth="4" aria-pressed="false" disabled>4</button><button type="button" data-depth="8" aria-pressed="false" disabled>8</button><button type="button" data-depth="16" aria-pressed="true" disabled>16</button><button type="button" data-depth="32" aria-pressed="false" disabled>32</button></div>
+          <div class="bar-chart" id="monitor-chart" aria-live="polite">
+            <div class="bar-row"><span>Internal-state probe</span><div class="bar-track"><div class="bar-fill green" id="latent-bar" style="width:91.8919%"></div></div><strong id="latent-score">91.9%</strong></div>
+            <div class="bar-row"><span>TF–IDF text monitor</span><div class="bar-track"><div class="bar-fill blue" id="tfidf-bar" style="width:43.2432%"></div></div><strong id="tfidf-score">43.2%</strong></div>
+            <div class="bar-row"><span>MiniLM text monitor</span><div class="bar-track"><div class="bar-fill pale" id="minilm-bar" style="width:41.8919%"></div></div><strong id="minilm-score">41.9%</strong></div>
+            <div class="bar-scale"><span>0%</span><span>50% chance</span><span>100%</span></div>
+          </div>
+          <p class="cohort-note" id="cohort-note">All three monitors use the same 74 eligible test examples at R = 16.</p>
+          <div class="task-readout"><div><span>Huginn’s task accuracy</span><strong id="task-score">50.0%</strong></div><p id="task-ci">95% interval: 39.2–60.8% · all 74 test examples</p></div>
+          <figcaption>Figure 2. Monitor bars show path-label balanced accuracy on the same eligible examples within each depth. Task accuracy measures correct policy answers on all 74 test examples. Nonempty-rationale eligibility gives 55, 67, 74, and 74 examples across depths. <a href="assets/research/huginn/main_results.csv" download>Paired results ↗</a> · <a href="assets/research/huginn/minilm_text_monitor_results.csv" download>MiniLM results ↗</a></figcaption>
+        </figure>
+        <p>These results don’t tell me that useful reasoning is happening somewhere the explanation can’t reach. They tell me what these particular classifiers can recover. Another text monitor might do better, and information in an internal state might help my probe without helping Huginn. I don’t have a verified record of the model’s reasoning to compare against.</p>
+      </section>
+      <section id="patching">
+        <h2>Swapping states between problems</h2>
+        <p>For the patching test, I take the internal state from one problem and insert it into its paired counterfactual’s run. The first problem is the “donor”; the run receiving the state is the “recipient.” I replace the last prompt token’s state at a chosen loop, let the model continue, and check whether its answer moves toward the donor’s answer.</p>
+        <p>I also run controls: replacing a state with itself, taking a state from an unrelated problem, and using a donor with the same answer. Those comparisons help check whether a change is specific to the counterfactual, rather than just a consequence of disturbing the state.</p>
+        <p>An <strong>answer flip</strong> means the preferred answer changes toward the donor’s answer. The <strong>logit margin</strong> is the difference between the model’s raw scores for the answer options. It can move a little without changing which answer wins, so I check both.</p>
+        <figure class="dev-article-figure">
+          <div class="figure-heading"><h3>Counterfactual state patching</h3><span>R = 32 · 24 pairs</span></div>
+          <div class="patch-flow"><div><span>Donor state</span><strong>h<sub>k</sub><sup>donor</sup></strong></div><span aria-hidden="true">→</span><div><span>Recipient</span><strong>Replace h<sub>k</sub></strong></div><span aria-hidden="true">→</span><div><span>Resume</span><strong>Score A / B</strong></div></div>
+          <div class="patch-controls"><label for="patch-loop">Patch at loop</label><select id="patch-loop" disabled><option>1</option><option>2</option><option>4</option><option>8</option><option selected>16</option><option>24</option><option>32</option></select></div>
+          <div class="patch-readout" aria-live="polite"><div><strong id="patch-flips">0 / 24</strong><span>donor-directed answer flips</span></div><div><strong id="patch-upper">14.2%</strong><span>exact 95% upper bound on flip rate</span></div></div>
+          <p id="patch-margin" class="readout-note">Select a loop to inspect its measured answer-margin shift.</p>
+          <figcaption>Figure 3. No donor-directed flips at any tested loop. The same 24 pairs are reused across conditions; these are not 168 independent pairs. No pair qualifies for the stricter both-answers-correct analysis. <a href="assets/research/huginn/patching_results.csv" download>Source CSV ↗</a></figcaption>
+        </figure>
+        <p>None of the 24 pairs produced a donor-directed answer flip at any tested loop. There were small changes in answer margins, but they didn’t clearly separate from the unrelated-donor control. I wouldn’t treat this as proof that the state has no effect: 24 pairs is a small sample, I’m only patching one token position, and the model wasn’t reliably solving these problems in the first place.</p>
+      </section>
+      <section id="limits">
+        <h2>What I still need to check</h2>
+        <p>I found a label that becomes easier to read from Huginn’s later states, but I haven’t shown that it uses that label to answer. The paper calls this <strong>late linear decodability without demonstrated behavioral use</strong>. The “demonstrated” part matters: the patching test is too limited to rule out an effect.</p>
+        <p>I’d start the next round with a task Huginn can solve reliably. Right now, a failed patch is difficult to interpret when the original answer is often wrong. I also need to repeat the runs with different seeds and datasets, check more carefully for shortcuts based on the words in the prompt, and recompute the intervals by resampling whole pairs.</p>
+        <p>The patches could be more precise too. I replaced an entire token state, which changes a lot of features at once. Testing a smaller, targeted change would help narrow down what is responsible for any effect.</p>
+      </section>
+      <section id="resources" class="resources">
+        <h2>Paper and data</h2>
+        <p>The paper has the full methods and controls, along with the results that didn’t fit here. I’ve included the LaTeX source and the CSVs used by these figures below.</p>
+        <div class="resource-links"><a href="assets/research/huginn/paper.pdf"><span>Full paper<small>PDF · 21 pages</small></span><span aria-hidden="true">↗</span></a><a href="assets/research/huginn/latex-source.zip" download><span>LaTeX source<small>Manuscript and figures · ZIP</small></span><span aria-hidden="true">↓</span></a><a href="assets/research/huginn/README.md"><span>Data and provenance<small>CSV sources and cohort definitions</small></span><span aria-hidden="true">↗</span></a></div>
+        <p class="resource-note">The interactive figures use saved results; they aren’t running Huginn in your browser. The PDF’s title uses “without Behavioral Use.” As discussed above, the evidence supports the narrower “without demonstrated behavioral use.”</p>
+      </section>
+      <noscript><p class="technical-note">JavaScript is off. The article and default measured results remain available; download the linked CSV files to explore every condition.</p></noscript>
+      <footer class="article-footer"><span>Shane Janney · 2026</span><a href="dev-work.html">← back to dev work</a></footer>
+    </article>
+  </main>
+</body>
+</html>
