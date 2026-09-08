@@ -1,46 +1,68 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Huginn research article', () => {
-  test('Architecture walkthrough explains each stage with reduced motion', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/dev-huginn.html');
-    await expect(page.locator('#model-play')).toBeDisabled();
-    await expect(page.locator('#model-next')).toBeEnabled();
-    const stages = ['prelude', 'core', 'core', 'core', 'core', 'core', 'coda', 'output'];
-    for (const [index, stage] of stages.entries()) {
-      await page.locator('#model-next').click();
-      await expect(page.locator('.model-block[aria-current="step"]')).toHaveAttribute('data-model-stage', stage);
-      await expect(page.locator('#model-progress')).toHaveText(`${index + 2} / 9`);
-    }
-    await expect(page.locator('#model-stage-title')).toHaveText('Produce the next token');
-    await page.locator('#model-next').click();
-    await expect(page.locator('#model-progress')).toHaveText('1 / 9');
-    expect(await page.locator('.model-walkthrough').evaluate(element => element.getAnimations({ subtree: true }).length)).toBe(0);
-  });
-
-  test('Walkthrough plays once, pauses, and can replay', async ({ page }) => {
-    await page.clock.install();
+  test('Architecture explorer is detailed, user-driven, and does not autoplay', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/dev-huginn.html');
-    await page.locator('#model-next').click();
-    await page.locator('#model-play').click();
-    await page.clock.runFor(2200);
-    await expect(page.locator('#model-progress')).toHaveText('3 / 9');
-    await page.locator('#model-play').click();
-    await page.clock.runFor(4400);
-    await expect(page.locator('#model-progress')).toHaveText('3 / 9');
-    await page.locator('#model-play').click();
-    await page.clock.runFor(13200);
-    await expect(page.locator('#model-progress')).toHaveText('9 / 9');
-    await expect(page.locator('#model-play')).toHaveText('Replay walkthrough');
-    await page.clock.runFor(4400);
-    await expect(page.locator('#model-progress')).toHaveText('9 / 9');
-    await page.locator('#model-play').click();
-    await expect(page.locator('#model-progress')).toHaveText('1 / 9');
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.clock.runFor(4400);
-    await expect(page.locator('#model-progress')).toHaveText('1 / 9');
+
+    const figure = page.locator('#architecture-explorer');
+    await expect(figure).toBeVisible();
+    await expect(page.locator('.model-walkthrough')).toHaveCount(0);
+    await expect(figure).toContainText('same parameters every loop');
+    await expect(figure).toContainText('hₖ = Gθ(hₖ₋₁, e)');
+    await expect(figure.locator('[data-architecture-stage="0"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#architecture-stage-index')).toHaveText('01 / 09');
+
+    await page.waitForTimeout(700);
+    await expect(page.locator('#architecture-stage-index')).toHaveText('01 / 09');
+    await expect(figure.evaluate(element => element.getAnimations({ subtree: true }).length)).resolves.toBe(0);
+
+    await figure.locator('[data-architecture-stage="3"]').click();
+    await expect(page.locator('#architecture-stage-title')).toHaveText('The shared core produces h1');
+    await expect(page.locator('#architecture-state')).toHaveText('h1');
+    await expect(figure.locator('[data-architecture-node="core"]')).toHaveClass(/is-active/);
+
+    await figure.locator('[data-architecture-stage="6"]').click();
+    await expect(page.locator('#architecture-stage-description')).toContainText('R is set to 4, 8, 16, or 32');
+    await expect(page.locator('#architecture-fixed')).toContainText('checkpoint and prompt remain the same');
+    await expect.poll(() => figure.evaluate(element => element.getAnimations({ subtree: true }).length)).toBe(0);
   });
+
+  test('Architecture depth selector exposes the test-time compute intervention', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/dev-huginn.html');
+    const figure = page.locator('#architecture-explorer');
+    await expect(figure).toBeVisible();
+
+    await expect(figure.locator('[data-architecture-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#architecture-depth-title')).toHaveText('R = 16 · 16 recurrent updates');
+    const before = await page.locator('#architecture-depth-marker').evaluate(element => getComputedStyle(element).left);
+
+    await figure.locator('[data-architecture-depth="32"]').click();
+    await expect(page.locator('#architecture-depth-title')).toHaveText('R = 32 · 32 recurrent updates');
+    await expect(page.locator('#architecture-depth-marker-label')).toHaveText('h32');
+    await expect.poll(() => page.locator('#architecture-depth-marker').evaluate(element => getComputedStyle(element).left)).not.toBe(before);
+
+    const depth32 = figure.locator('[data-architecture-depth="32"]');
+    await depth32.focus();
+    await depth32.press('ArrowLeft');
+    await expect(figure.locator('[data-architecture-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#architecture-depth-copy')).toContainText('same Gθ parameters');
+    await expect.poll(() => figure.evaluate(element => element.getAnimations({ subtree: true }).length)).toBe(0);
+  });
+
+  test('Architecture explorer respects reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/dev-huginn.html');
+    const figure = page.locator('#architecture-explorer');
+    await expect(figure).toBeVisible();
+    await figure.locator('[data-architecture-stage="4"]').click();
+    await figure.locator('[data-architecture-depth="32"]').click();
+    await expect(page.locator('#architecture-state')).toHaveText('h2');
+    await expect(page.locator('#architecture-depth-marker-label')).toHaveText('h32');
+    expect(await figure.evaluate(element => element.getAnimations({ subtree: true }).length)).toBe(0);
+  });
+
   test('Example motion is finite, interruptible, and settles on the selected data', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     await page.goto('/dev-huginn.html');
@@ -196,6 +218,7 @@ test.describe('Huginn research article', () => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.goto('/dev-huginn.html');
       await expect(page.locator('#loop-slider')).toBeEnabled();
+      await expect(page.locator('#architecture-explorer')).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       const escaping = await page.locator('.dev-article *').evaluateAll(elements => elements.filter(element => {
         const rect = element.getBoundingClientRect();
@@ -204,6 +227,8 @@ test.describe('Huginn research article', () => {
       expect(escaping).toEqual([]);
       await page.locator('[data-depth="32"]').click();
       await expect(page.locator('#latent-score')).toHaveText('86.5%');
+      await page.locator('[data-architecture-depth="32"]').click();
+      await expect(page.locator('#architecture-depth-marker-label')).toHaveText('h32');
       await page.locator('#loop-slider').focus();
       await page.locator('#loop-slider').press('Home');
       await expect(page.locator('#loop-score')).toHaveText('48.6%');
