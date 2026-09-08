@@ -56,29 +56,47 @@ test.describe('Site polish', () => {
     });
   }
 
-  test('Huginn gets two explanatory animated examples', async ({ page }) => {
+  test('Huginn gets two data-backed evidence interactions', async ({ page }) => {
     await page.goto('/dev-huginn.html');
     await waitForPolish(page);
+
     const signal = page.locator('#signal-example');
     const causal = page.locator('#causal-example');
     await expect(signal).toBeVisible();
     await expect(causal).toBeVisible();
 
-    await signal.scrollIntoViewIfNeeded();
-    await expect.poll(async () => signal.evaluate((el) => el.classList.contains('is-visible'))).toBe(true);
-    await causal.scrollIntoViewIfNeeded();
-    await expect.poll(async () => causal.evaluate((el) => el.classList.contains('is-visible'))).toBe(true);
+    await expect(signal).toContainText('paired held-out measurements');
+    await expect(signal).not.toContainText('conceptual animation');
+    await expect(signal.locator('[data-evidence-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(signal.locator('[data-readout="state"]')).toHaveText('91.9%');
+    await expect(signal.locator('[data-readout="text"]')).toHaveText('43.2%');
+    await expect(signal.locator('[data-readout="task"]')).toHaveText('50.0%');
 
-    await expect(signal).toContainText('conceptual animation');
-    await expect(causal).toContainText('Decodable is not the same as causal');
+    await signal.locator('[data-evidence-depth="32"]').click();
+    await expect(signal.locator('[data-readout="state"]')).toHaveText('86.5%');
+    await expect(signal.locator('[data-readout="task"]')).toHaveText('47.3%');
+    await expect(signal.locator('[data-readout="insight"]')).toContainText('43.2 percentage points above');
+
+    await expect(causal).toContainText('measured patching effects');
+    await expect(causal.locator('[data-evidence-loop="16"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(causal.locator('[data-patch-readout="counterfactual"]')).toHaveText('+0.0020');
+    await expect(causal.locator('[data-patch-readout="control"]')).toHaveText('-0.0082');
+
+    await causal.locator('[data-evidence-loop="32"]').click();
+    await expect(causal.locator('[data-patch-readout="counterfactual"]')).toHaveText('+0.0176');
+    await expect(causal.locator('[data-patch-readout="control"]')).toHaveText('+0.0045');
+    await expect(causal.locator('[data-patch-readout="insight"]')).toContainText('0 / 24');
   });
 
-  test('New examples respect reduced motion', async ({ page }) => {
+  test('New evidence interactions respect reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/dev-huginn.html');
     await waitForPolish(page);
     await expect(page.locator('#signal-example')).toBeVisible();
     await expect(page.locator('#causal-example')).toBeVisible();
+
+    await page.locator('[data-evidence-depth="32"]').click();
+    await page.locator('[data-evidence-loop="32"]').click();
     const animations = await page.locator('.polish-example').evaluateAll((elements) =>
       elements.flatMap((element) => element.getAnimations({ subtree: true })).length
     );
