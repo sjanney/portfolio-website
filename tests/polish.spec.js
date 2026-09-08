@@ -88,6 +88,36 @@ test.describe('Site polish', () => {
     await expect(causal.locator('[data-patch-readout="insight"]')).toContainText('0 / 24');
   });
 
+  test('Evidence selections glide between measured states after user input', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto('/dev-huginn.html');
+    await waitForPolish(page);
+    const signal = page.locator('#signal-example');
+    await expect(signal).toBeVisible();
+
+    const positions = await signal.evaluate(async (element) => {
+      const line = element.querySelector('.evidence-selection-line');
+      const button = element.querySelector('[data-evidence-depth="32"]');
+      const before = Number(line.getAttribute('x1'));
+      button.click();
+      const immediate = Number(line.getAttribute('x1'));
+      await new Promise((resolve) => setTimeout(resolve, 110));
+      const during = Number(line.getAttribute('x1'));
+      return { before, immediate, during };
+    });
+
+    expect(positions.immediate).toBeCloseTo(positions.before, 3);
+    expect(positions.during).toBeGreaterThan(positions.before);
+    expect(positions.during).toBeLessThan(692);
+    await expect.poll(() => signal.locator('.evidence-selection-line').getAttribute('x1').then(Number)).toBeCloseTo(692, 1);
+    await expect.poll(() => signal.locator('#observability-evidence-readout').evaluate((element) => element.getAnimations().length)).toBe(0);
+
+    const depth32 = signal.locator('[data-evidence-depth="32"]');
+    await depth32.focus();
+    await depth32.press('ArrowLeft');
+    await expect(signal.locator('[data-evidence-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
+  });
+
   test('New evidence interactions respect reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/dev-huginn.html');
