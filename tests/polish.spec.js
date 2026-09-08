@@ -11,6 +11,12 @@ const primaryPages = [
   '/dev-learned-indexes.html',
 ];
 
+async function waitForPolish(page) {
+  const link = page.locator('link[data-site-polish]');
+  await expect(link).toHaveCount(1);
+  await expect.poll(() => link.evaluate((element) => Boolean(element.sheet))).toBe(true);
+}
+
 test.describe('Site polish', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem('permissionsPrompted', 'false'));
@@ -19,7 +25,7 @@ test.describe('Site polish', () => {
   test('rendered primary pages contain no emoji or decorative arrow glyphs', async ({ page }) => {
     for (const path of primaryPages) {
       await page.goto(path);
-      await expect(page.locator('link[data-site-polish]')).toHaveCount(1);
+      await waitForPolish(page);
       const text = await page.locator('body').innerText();
       expect(text, path).not.toMatch(/[\p{Extended_Pictographic}←↑→↓↖↗↘↙↻]/u);
     }
@@ -30,7 +36,7 @@ test.describe('Site polish', () => {
       await page.setViewportSize({ width, height: 900 });
       for (const path of primaryPages) {
         await page.goto(path);
-        await expect(page.locator('link[data-site-polish]')).toHaveCount(1);
+        await waitForPolish(page);
         const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
         expect(fits, `${path} at ${width}px`).toBe(true);
       }
@@ -39,6 +45,7 @@ test.describe('Site polish', () => {
 
   test('Huginn gets two explanatory animated examples', async ({ page }) => {
     await page.goto('/dev-huginn.html');
+    await waitForPolish(page);
     const signal = page.locator('#signal-example');
     const causal = page.locator('#causal-example');
     await expect(signal).toBeVisible();
@@ -56,6 +63,7 @@ test.describe('Site polish', () => {
   test('New examples respect reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/dev-huginn.html');
+    await waitForPolish(page);
     await expect(page.locator('#signal-example')).toBeVisible();
     await expect(page.locator('#causal-example')).toBeVisible();
     const animations = await page.locator('.polish-example').evaluateAll((elements) =>
