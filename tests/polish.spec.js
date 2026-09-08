@@ -35,13 +35,15 @@ test.describe('Site polish', () => {
     }
   });
 
-  test('dynamic Huginn controls stay free of decorative glyphs', async ({ page }) => {
+  test('dynamic Huginn architecture controls stay free of decorative glyphs', async ({ page }) => {
     await page.goto('/dev-huginn.html');
     await waitForPolish(page);
-    const next = page.locator('#model-next');
-    await expect(next).toBeEnabled();
-    await next.click();
-    await expect.poll(() => next.innerText()).not.toMatch(/[←↑→↓↖↗↘↙↻]/);
+    const explorer = page.locator('#architecture-explorer');
+    await expect(explorer).toBeVisible();
+    await explorer.locator('[data-architecture-stage="3"]').click();
+    await explorer.locator('[data-architecture-depth="32"]').click();
+    const text = await explorer.innerText();
+    expect(text).not.toMatch(/[←↑→↓↖↗↘↙↻]/);
   });
 
   for (const width of [320, 390, 768]) {
@@ -56,14 +58,20 @@ test.describe('Site polish', () => {
     });
   }
 
-  test('Huginn gets two data-backed evidence interactions', async ({ page }) => {
+  test('Huginn gets the architecture explorer and two data-backed evidence interactions', async ({ page }) => {
     await page.goto('/dev-huginn.html');
     await waitForPolish(page);
 
+    const architecture = page.locator('#architecture-explorer');
     const signal = page.locator('#signal-example');
     const causal = page.locator('#causal-example');
+    await expect(architecture).toBeVisible();
     await expect(signal).toBeVisible();
     await expect(causal).toBeVisible();
+
+    await expect(architecture).toContainText('What changes when recurrence depth increases');
+    await expect(architecture.locator('[data-architecture-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
+    await expect(architecture).toContainText('The architecture and weights stay the same');
 
     await expect(signal).toContainText('paired held-out measurements');
     await expect(signal).not.toContainText('conceptual animation');
@@ -118,16 +126,19 @@ test.describe('Site polish', () => {
     await expect(signal.locator('[data-evidence-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
   });
 
-  test('New evidence interactions respect reduced motion', async ({ page }) => {
+  test('New research interactions respect reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/dev-huginn.html');
     await waitForPolish(page);
+    await expect(page.locator('#architecture-explorer')).toBeVisible();
     await expect(page.locator('#signal-example')).toBeVisible();
     await expect(page.locator('#causal-example')).toBeVisible();
 
+    await page.locator('[data-architecture-stage="5"]').click();
+    await page.locator('[data-architecture-depth="32"]').click();
     await page.locator('[data-evidence-depth="32"]').click();
     await page.locator('[data-evidence-loop="32"]').click();
-    const animations = await page.locator('.polish-example').evaluateAll((elements) =>
+    const animations = await page.locator('#architecture-explorer, .polish-example').evaluateAll((elements) =>
       elements.flatMap((element) => element.getAnimations({ subtree: true })).length
     );
     expect(animations).toBe(0);
