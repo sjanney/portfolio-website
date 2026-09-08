@@ -1,0 +1,38 @@
+/* Narrow-screen fixes discovered by the full Playwright suite. */
+
+@media (max-width: 900px) {
+    /* Keep every article TOC item inside the viewport instead of using an offscreen rail. */
+    .huginn-page .article-contents {
+        flex-wrap: wrap !important;
+        overflow: visible !important;
+        white-space: normal !important;
+    }
+
+    .huginn-page .article-contents a,
+    .huginn-page .paper-links a,
+    .huginn-page figcaption a,
+    .huginn-page .resource-links a,
+    .huginn-page .article-footer a {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .huginn-page .article-footer {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Framer Motion rotates the project cards, which can otherwise enlarge document scroll bounds. */
+    .projects-content .project-stack-container {
+        overflow: clip;
+        border-radius: .9rem;
+    }
+
+    .projects-content .stack-container {
+        width: calc(100% - 1.25rem);
+        margin-inline: auto;
+    }
+}

@@ -451,4 +451,13 @@
     // Start entrance animations immediately
     runEntranceAnimations();
 
+    // Load site-wide responsive and research polish after the base behavior is initialized.
+    if (!document.querySelector('script[data-site-polish]')) {
+        const sitePolishScript = document.createElement('script');
+        sitePolishScript.src = 'assets/js/site-polish.js';
+        sitePolishScript.defer = true;
+        sitePolishScript.dataset.sitePolish = 'true';
+        document.head.appendChild(sitePolishScript);
+    }
+
 })();
