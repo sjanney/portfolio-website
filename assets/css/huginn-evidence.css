@@ -1,0 +1,253 @@
+/* Evidence-first Huginn interactions. Motion is reserved for user-selected state changes. */
+.huginn-page .evidence-figure {
+    margin: 3rem 0;
+    padding: 1.5rem 0 !important;
+    overflow: visible;
+    background: transparent !important;
+    border: 0 !important;
+    border-top: 1px solid var(--research-line) !important;
+    border-bottom: 1px solid var(--research-line) !important;
+    border-radius: 0 !important;
+}
+
+.huginn-page .evidence-figure .figure-heading {
+    margin-bottom: .6rem;
+}
+
+.huginn-page .evidence-intro {
+    max-width: 44rem;
+    margin: 0 0 1.2rem !important;
+    font-size: .92rem !important;
+    line-height: 1.55 !important;
+}
+
+.huginn-page .evidence-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem 1rem;
+    margin-bottom: .85rem;
+    color: var(--research-muted);
+    font-size: .72rem;
+}
+
+.huginn-page .evidence-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: .38rem;
+}
+
+.huginn-page .evidence-legend i {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1px;
+    background: currentColor;
+}
+
+.huginn-page .evidence-legend .state { color: var(--research-green); }
+.huginn-page .evidence-legend .text { color: var(--research-blue); }
+.huginn-page .evidence-legend .task { color: #7a7f79; }
+.huginn-page .evidence-legend .control { color: #7a7f79; }
+
+.huginn-page .evidence-chart {
+    width: 100%;
+    margin: .4rem 0 1rem;
+}
+
+.huginn-page .evidence-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    font-family: inherit;
+}
+
+.huginn-page .evidence-grid-line {
+    stroke: rgba(26, 26, 26, .09);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+}
+
+.huginn-page .evidence-grid-line.chance,
+.huginn-page .evidence-grid-line.zero {
+    stroke: rgba(26, 26, 26, .32);
+    stroke-dasharray: 4 5;
+}
+
+.huginn-page .evidence-axis-label {
+    fill: var(--research-muted);
+    font-size: 11px;
+}
+
+.huginn-page .evidence-series-line {
+    fill: none;
+    stroke-width: 1.6;
+    vector-effect: non-scaling-stroke;
+}
+
+.huginn-page .evidence-series-dot {
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+}
+
+.huginn-page .series-state .evidence-series-line,
+.huginn-page .series-state .evidence-whisker { stroke: var(--research-green); }
+.huginn-page .series-state .evidence-series-dot { fill: var(--research-green); stroke: var(--research-green); }
+
+.huginn-page .series-text .evidence-series-line { stroke: var(--research-blue); }
+.huginn-page .series-text .evidence-series-dot { fill: var(--research-blue); stroke: var(--research-blue); }
+
+.huginn-page .series-task .evidence-series-line,
+.huginn-page .series-control .evidence-series-line,
+.huginn-page .series-control .evidence-whisker { stroke: #7a7f79; }
+.huginn-page .series-task .evidence-series-dot,
+.huginn-page .series-control .evidence-series-dot { fill: #7a7f79; stroke: #7a7f79; }
+
+.huginn-page .evidence-whisker {
+    stroke-width: 1;
+    opacity: .55;
+    vector-effect: non-scaling-stroke;
+}
+
+.huginn-page .evidence-selection-line {
+    stroke: rgba(26, 26, 26, .48);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+}
+
+.huginn-page .evidence-selection-dot {
+    fill: var(--bg);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+}
+
+.huginn-page .evidence-selection-dot.series-state { stroke: var(--research-green); }
+.huginn-page .evidence-selection-dot.series-text { stroke: var(--research-blue); }
+.huginn-page .evidence-selection-dot.series-task,
+.huginn-page .evidence-selection-dot.series-control { stroke: #7a7f79; }
+
+.huginn-page .evidence-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .2rem .55rem;
+    padding-top: .8rem;
+    border-top: 1px solid rgba(26, 26, 26, .08);
+}
+
+.huginn-page .evidence-controls > span {
+    margin-right: auto;
+    color: var(--research-muted);
+    font-size: .75rem;
+}
+
+.huginn-page .evidence-controls button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: .4rem .2rem;
+    color: var(--research-muted);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    border-radius: 0;
+    font-size: .78rem;
+}
+
+.huginn-page .evidence-controls button:hover,
+.huginn-page .evidence-controls button:focus-visible {
+    color: var(--text-primary);
+}
+
+.huginn-page .evidence-controls button[aria-pressed="true"] {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-primary);
+}
+
+.huginn-page .evidence-readout {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.huginn-page .evidence-readout-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.huginn-page .evidence-readout > div {
+    min-width: 0;
+    padding-top: .75rem;
+    border-top: 1px solid rgba(26, 26, 26, .11);
+}
+
+.huginn-page .evidence-readout span,
+.huginn-page .evidence-readout small {
+    display: block;
+    color: var(--research-muted);
+    font-size: .72rem;
+    line-height: 1.45;
+}
+
+.huginn-page .evidence-readout strong {
+    display: block;
+    margin: .18rem 0 .1rem;
+    color: var(--text-primary);
+    font-size: clamp(1.25rem, 3vw, 1.65rem);
+    font-weight: 500;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+}
+
+.huginn-page .dev-article .evidence-insight {
+    margin: 1rem 0 0;
+    color: var(--research-muted);
+    font-size: .82rem;
+    line-height: 1.55;
+}
+
+.huginn-page .evidence-figure figcaption {
+    margin-top: 1.2rem;
+}
+
+@media (max-width: 640px) {
+    .huginn-page .evidence-figure {
+        margin: 2.4rem 0;
+        padding: 1.15rem 0 !important;
+    }
+
+    .huginn-page .evidence-intro {
+        font-size: .88rem !important;
+    }
+
+    .huginn-page .evidence-legend {
+        gap: .45rem .8rem;
+    }
+
+    .huginn-page .evidence-axis-label {
+        font-size: 10px;
+    }
+
+    .huginn-page .evidence-controls > span {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: .1rem;
+    }
+
+    .huginn-page .evidence-controls button {
+        flex: 1 1 44px;
+    }
+
+    .huginn-page .evidence-readout,
+    .huginn-page .evidence-readout-two {
+        grid-template-columns: 1fr;
+        gap: .65rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .huginn-page .evidence-figure *,
+    .huginn-page .evidence-figure *::before,
+    .huginn-page .evidence-figure *::after {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+    }
+}
