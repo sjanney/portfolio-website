@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    const skippedTags = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'TEXTAREA']);
+    const emojiPattern = /\p{Extended_Pictographic}/gu;
+    const decorativeArrowPattern = /[←↑→↓↖↗↘↙↻]/g;
+
     function loadResponsiveStyles() {
         if (document.querySelector('link[data-site-polish]')) return;
         const link = document.createElement('link');
@@ -10,33 +14,49 @@
         document.head.appendChild(link);
     }
 
-    function stripEmojiAndDecorativeArrows() {
-        const skippedTags = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'TEXTAREA']);
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        const nodes = [];
+    function cleanText(value) {
+        return value
+            .replace(emojiPattern, '')
+            .replace(decorativeArrowPattern, '')
+            .replace(/ {2,}/g, ' ');
+    }
 
-        while (walker.nextNode()) {
-            const node = walker.currentNode;
-            const parent = node.parentElement;
-            if (!parent || skippedTags.has(parent.tagName)) continue;
-            nodes.push(node);
+    function sanitizeTextNode(node) {
+        const parent = node.parentElement;
+        if (!parent || skippedTags.has(parent.tagName)) return;
+        const cleaned = cleanText(node.nodeValue || '');
+        if (cleaned !== node.nodeValue) node.nodeValue = cleaned;
+    }
+
+    function sanitizeTree(root) {
+        if (root.nodeType === Node.TEXT_NODE) {
+            sanitizeTextNode(root);
+            return;
         }
+        if (!(root instanceof Element) || skippedTags.has(root.tagName)) return;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) sanitizeTextNode(walker.currentNode);
+    }
 
-        const emojiPattern = /\p{Extended_Pictographic}/gu;
-        const decorativeArrowPattern = /[←↑→↓↖↗↘↙↻]/g;
-
-        nodes.forEach((node) => {
-            node.nodeValue = node.nodeValue
-                .replace(emojiPattern, '')
-                .replace(decorativeArrowPattern, '')
-                .replace(/\s{2,}/g, ' ');
-        });
+    function stripEmojiAndDecorativeArrows() {
+        sanitizeTree(document.body);
 
         const cycle = document.querySelector('.model-cycle');
         if (cycle) cycle.textContent = 'loop';
 
         const outputSymbol = document.querySelector('.model-block[data-model-stage="output"] .model-symbol');
         if (outputSymbol) outputSymbol.textContent = 'out';
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'characterData') {
+                    sanitizeTextNode(mutation.target);
+                    return;
+                }
+                mutation.addedNodes.forEach((node) => sanitizeTree(node));
+            });
+        });
+        observer.observe(document.body, { subtree: true, childList: true, characterData: true });
     }
 
     function createSignalExample() {
