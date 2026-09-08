@@ -1,4 +1,31 @@
-/* Narrow-screen fixes discovered by the full Playwright suite. */
+/* Follow-up fixes discovered by the full Playwright suite. */
+
+/* Let the conceptual research animations visually settle instead of retaining
+   finished CSS Animation objects. The final signal state is represented by
+   ordinary CSS, so getAnimations() returns to zero after each finite cue. */
+.polish-example.is-visible .signal-step::after {
+    transform: scaleX(.9);
+    opacity: .78;
+    animation: signal-build 1.15s cubic-bezier(.22, 1, .36, 1);
+}
+
+.polish-example.is-visible .signal-track.rationale .signal-step::after {
+    transform: scaleX(.28);
+    opacity: .3;
+    animation-name: rationale-drift;
+    animation-duration: 1.15s;
+    animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+    animation-iteration-count: 1;
+    animation-fill-mode: none;
+}
+
+.polish-example.is-visible .causal-pulse {
+    animation: causal-pulse 1.05s ease-in-out .15s 1 none;
+}
+
+.polish-example.is-visible .causal-lane.patch .causal-output {
+    animation: output-holds 1.05s ease-in-out .15s 1 none;
+}
 
 @media (max-width: 900px) {
     /* Keep every article TOC item inside the viewport instead of using an offscreen rail. */
