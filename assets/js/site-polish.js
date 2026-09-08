@@ -6,12 +6,21 @@
     const decorativeArrowPattern = /[←↑→↓↖↗↘↙↻]/g;
 
     function loadResponsiveStyles() {
-        if (document.querySelector('link[data-site-polish]')) return;
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'assets/css/mobile-polish.css';
-        link.dataset.sitePolish = 'true';
-        document.head.appendChild(link);
+        if (!document.querySelector('link[data-site-polish]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'assets/css/mobile-polish.css';
+            link.dataset.sitePolish = 'true';
+            document.head.appendChild(link);
+        }
+
+        if (!document.querySelector('link[data-site-polish-fixes]')) {
+            const fixes = document.createElement('link');
+            fixes.rel = 'stylesheet';
+            fixes.href = 'assets/css/mobile-polish-fixes.css';
+            fixes.dataset.sitePolishFixes = 'true';
+            document.head.appendChild(fixes);
+        }
     }
 
     function cleanText(value) {
