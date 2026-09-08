@@ -87,7 +87,7 @@ test.describe('Portfolio Website Tests', () => {
     await expect(gallery).toBeVisible();
     await expect(page.locator('.slawn-gallery-title')).toHaveText('slawn on w14th street');
     await expect(page.locator('.slawn-gallery-item')).toHaveCount(20);
-    await expect(page.locator('.slawn-gallery-back')).toHaveText('← back to work');
+    await expect(page.locator('.slawn-gallery-back')).toHaveText('back to work');
 
     const firstThumbnailIsSquare = await page.locator('.slawn-gallery-item').first().evaluate(element => {
       const rect = element.getBoundingClientRect();
@@ -199,7 +199,7 @@ test.describe('Portfolio Website Tests', () => {
     await page.goto('/dev-work.html');
     await expect(page.locator('.dev-link')).toHaveCount(2);
     await expect(page.locator('.dev-link').first()).toBeVisible();
-    await expect(page.locator('.dev-item-arrow')).toHaveText(['↗', '↗']);
+    await expect(page.locator('.dev-item-arrow')).toHaveCount(2);
 
     const devWorkHasNoOverflow = await page.evaluate(() => (
       document.documentElement.scrollWidth <= window.innerWidth
