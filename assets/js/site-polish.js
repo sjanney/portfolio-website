@@ -66,7 +66,10 @@
                         <span class="signal-step"></span><span class="signal-step"></span><span class="signal-step"></span><span class="signal-step"></span>
                     </div>
                 </div>
-                <div class="signal-loop-labels"><span>early</span><span>mid</span><span>late</span><span>final</span></div>
+                <div class="signal-row signal-loop-row" aria-hidden="true">
+                    <span></span>
+                    <div class="signal-loop-labels"><span>early</span><span>mid</span><span>late</span><span>final</span></div>
+                </div>
             </div>
             <figcaption>Conceptual illustration of the measurement setup, not a visualization of Huginn's activation vectors or a replacement for the measured charts below.</figcaption>
         `;
