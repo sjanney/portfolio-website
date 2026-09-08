@@ -3,6 +3,7 @@
 
     const SVG_NS = 'http://www.w3.org/2000/svg';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motionStates = new Set();
 
     function parseCsv(text) {
         const lines = text.trim().split(/\r?\n/).filter(Boolean);
@@ -47,18 +48,114 @@
         return points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(' ');
     }
 
-    function animateSelection(cursor, readout) {
+    function lerp(start, end, progress) {
+        return start + (end - start) * progress;
+    }
+
+    function easeOutQuint(progress) {
+        return 1 - Math.pow(1 - progress, 5);
+    }
+
+    function svgNumber(element, attribute) {
+        const value = Number(element.getAttribute(attribute));
+        return Number.isFinite(value) ? value : 0;
+    }
+
+    function createMotionState() {
+        const state = { frame: null, finish: null };
+        motionStates.add(state);
+        return state;
+    }
+
+    function settleMotion(state) {
+        if (state.frame !== null) {
+            cancelAnimationFrame(state.frame);
+            state.frame = null;
+        }
+        if (state.finish) {
+            const finish = state.finish;
+            state.finish = null;
+            finish();
+        }
+    }
+
+    function cancelElementAnimations(element) {
+        if (!element) return;
+        element.getAnimations({ subtree: true }).forEach((animation) => animation.cancel());
+    }
+
+    function animateTextChange(readout, insight) {
         if (reducedMotion.matches) return;
-        cursor.getAnimations().forEach((animation) => animation.cancel());
-        readout.getAnimations().forEach((animation) => animation.cancel());
-        cursor.animate(
-            [{ opacity: 0.35 }, { opacity: 1 }],
-            { duration: 150, easing: 'ease-out' }
-        );
-        readout.animate(
-            [{ opacity: 0.55, transform: 'translateY(2px)' }, { opacity: 1, transform: 'translateY(0)' }],
-            { duration: 180, easing: 'ease-out' }
-        );
+        [readout, insight].forEach((element, index) => {
+            if (!element) return;
+            cancelElementAnimations(element);
+            element.animate(
+                [
+                    { opacity: 0.58, transform: `translateY(${index === 0 ? 3 : 2}px)` },
+                    { opacity: 1, transform: 'translateY(0)' },
+                ],
+                {
+                    duration: index === 0 ? 240 : 280,
+                    delay: index === 0 ? 70 : 110,
+                    easing: 'cubic-bezier(.22, 1, .36, 1)',
+                }
+            );
+        });
+    }
+
+    function animateCursor(line, dots, targets, readout, insight, state) {
+        settleMotion(state);
+
+        const start = {
+            x: svgNumber(line, 'x1'),
+            dots: dots.map((dot) => ({ x: svgNumber(dot, 'cx'), y: svgNumber(dot, 'cy') })),
+        };
+
+        const apply = (progress) => {
+            const x = lerp(start.x, targets.x, progress);
+            line.setAttribute('x1', x);
+            line.setAttribute('x2', x);
+            dots.forEach((dot, index) => {
+                dot.setAttribute('cx', lerp(start.dots[index].x, targets.dots[index].x, progress));
+                dot.setAttribute('cy', lerp(start.dots[index].y, targets.dots[index].y, progress));
+            });
+        };
+
+        if (reducedMotion.matches) {
+            apply(1);
+            return;
+        }
+
+        const duration = 440;
+        const startedAt = performance.now();
+        state.finish = () => apply(1);
+
+        const tick = (now) => {
+            const raw = Math.min((now - startedAt) / duration, 1);
+            apply(easeOutQuint(raw));
+            if (raw < 1) {
+                state.frame = requestAnimationFrame(tick);
+            } else {
+                state.frame = null;
+                state.finish = null;
+            }
+        };
+
+        state.frame = requestAnimationFrame(tick);
+        animateTextChange(readout, insight);
+    }
+
+    function wireArrowKeys(buttons, selectValue, dataKey) {
+        buttons.forEach((button, index) => {
+            button.addEventListener('keydown', (event) => {
+                if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+                event.preventDefault();
+                const direction = event.key === 'ArrowRight' ? 1 : -1;
+                const next = (index + direction + buttons.length) % buttons.length;
+                buttons[next].focus();
+                selectValue(Number(buttons[next].dataset[dataKey]), true);
+            });
+        });
     }
 
     function buildObservabilityFigure(rows) {
@@ -104,7 +201,7 @@
                 <div><span>Task accuracy</span><strong data-readout="task"></strong></div>
             </div>
             <p class="evidence-insight" data-readout="insight"></p>
-            <figcaption>Measured values from <a href="assets/research/huginn/main_results.csv" download>main_results.csv</a>. The primary text-monitor line uses the paired text-monitor result in that table; Figure 2 above shows TF-IDF and MiniLM separately. Motion is only used when the reader changes the selected depth.</figcaption>
+            <figcaption>Measured values from <a href="assets/research/huginn/main_results.csv" download>main_results.csv</a>. The primary text-monitor line uses the paired text-monitor result in that table; Figure 2 above shows TF-IDF and MiniLM separately. Motion follows the selected measurement and never autoplays.</figcaption>
         `;
 
         section.appendChild(figure);
@@ -119,7 +216,7 @@
         const plotWidth = width - left - right;
         const plotHeight = height - top - bottom;
         const yMin = 0.35;
-        const yMax = 1.0;
+        const yMax = 1;
         const xFor = (index) => left + (plotWidth * index) / (data.length - 1);
         const yFor = (value) => top + ((yMax - value) / (yMax - yMin)) * plotHeight;
 
@@ -130,7 +227,7 @@
         });
         svg.classList.add('evidence-svg');
 
-        [0.4, 0.5, 0.6, 0.8, 1.0].forEach((tick) => {
+        [0.4, 0.5, 0.6, 0.8, 1].forEach((tick) => {
             const y = yFor(tick);
             const line = svgElement('line', { x1: left, y1: y, x2: width - right, y2: y });
             line.classList.add('evidence-grid-line');
@@ -187,20 +284,22 @@
         const buttons = Array.from(figure.querySelectorAll('[data-evidence-depth]'));
         const readout = figure.querySelector('#observability-evidence-readout');
         const insight = figure.querySelector('[data-readout="insight"]');
+        const motion = createMotionState();
+        let selectedDepth = null;
 
         function selectDepth(depth, shouldAnimate) {
             const index = data.findIndex((row) => row.depth === depth);
-            if (index < 0) return;
+            if (index < 0 || (selectedDepth === depth && shouldAnimate)) return;
             const row = data[index];
             const x = xFor(index);
-            cursorLine.setAttribute('x1', x);
-            cursorLine.setAttribute('x2', x);
-            cursorDots[0].setAttribute('cx', x);
-            cursorDots[0].setAttribute('cy', yFor(row.state));
-            cursorDots[1].setAttribute('cx', x);
-            cursorDots[1].setAttribute('cy', yFor(row.text));
-            cursorDots[2].setAttribute('cx', x);
-            cursorDots[2].setAttribute('cy', yFor(row.task));
+            const targets = {
+                x,
+                dots: [
+                    { x, y: yFor(row.state) },
+                    { x, y: yFor(row.text) },
+                    { x, y: yFor(row.task) },
+                ],
+            };
 
             buttons.forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.evidenceDepth) === depth)));
             readout.querySelector('[data-readout="state"]').textContent = percent(row.state);
@@ -211,13 +310,23 @@
             const direction = gap >= 0 ? 'above' : 'below';
             insight.textContent = `At R=${depth}, the state probe is ${Math.abs(gap).toFixed(1)} percentage points ${direction} the primary text monitor. This is a measurement gap, not evidence by itself that the decoded feature is causally used.`;
 
-            if (shouldAnimate) animateSelection(cursor, readout);
+            if (selectedDepth === null || !shouldAnimate) {
+                cursorLine.setAttribute('x1', x);
+                cursorLine.setAttribute('x2', x);
+                cursorDots.forEach((dot, dotIndex) => {
+                    dot.setAttribute('cx', targets.dots[dotIndex].x);
+                    dot.setAttribute('cy', targets.dots[dotIndex].y);
+                });
+            } else {
+                animateCursor(cursorLine, cursorDots, targets, readout, insight, motion);
+            }
+            selectedDepth = depth;
         }
 
         buttons.forEach((button) => {
             button.addEventListener('click', () => selectDepth(Number(button.dataset.evidenceDepth), true));
         });
-
+        wireArrowKeys(buttons, selectDepth, 'evidenceDepth');
         selectDepth(16, false);
     }
 
@@ -232,7 +341,6 @@
                 mean: number(row.mean_effect),
                 lower: number(row.effect_ci_lower),
                 upper: number(row.effect_ci_upper),
-                flips: Number(row.n_flip_pairs),
                 pairs: Number(row.n_pairs),
             }))
             .filter((row) => [row.mean, row.lower, row.upper].every((value) => value !== null))
@@ -376,19 +484,22 @@
         const buttons = Array.from(figure.querySelectorAll('[data-evidence-loop]'));
         const readout = figure.querySelector('#patch-evidence-readout');
         const insight = figure.querySelector('[data-patch-readout="insight"]');
+        const motion = createMotionState();
+        let selectedLoop = null;
 
         function selectLoop(loop, shouldAnimate) {
             const index = counterfactual.findIndex((row) => row.loop === loop);
-            if (index < 0) return;
+            if (index < 0 || (selectedLoop === loop && shouldAnimate)) return;
             const donor = counterfactual[index];
             const control = unrelated[index];
             const x = xFor(index);
-            cursorLine.setAttribute('x1', x);
-            cursorLine.setAttribute('x2', x);
-            donorDot.setAttribute('cx', x);
-            donorDot.setAttribute('cy', yFor(donor.mean));
-            controlDot.setAttribute('cx', x);
-            controlDot.setAttribute('cy', yFor(control.mean));
+            const targets = {
+                x,
+                dots: [
+                    { x, y: yFor(donor.mean) },
+                    { x, y: yFor(control.mean) },
+                ],
+            };
 
             buttons.forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.evidenceLoop) === loop)));
             readout.querySelector('[data-patch-readout="counterfactual"]').textContent = signed(donor.mean);
@@ -403,13 +514,23 @@
                 ? `At loop ${loop}, both intervals cross zero and overlap one another. The intervention is not cleanly separated from the unrelated-donor control; donor-directed flips remain 0 / ${donor.pairs}.`
                 : `At loop ${loop}, inspect the interval overlap before treating the mean shift as evidence of causal use; donor-directed flips remain 0 / ${donor.pairs}.`;
 
-            if (shouldAnimate) animateSelection(cursor, readout);
+            if (selectedLoop === null || !shouldAnimate) {
+                cursorLine.setAttribute('x1', x);
+                cursorLine.setAttribute('x2', x);
+                donorDot.setAttribute('cx', targets.dots[0].x);
+                donorDot.setAttribute('cy', targets.dots[0].y);
+                controlDot.setAttribute('cx', targets.dots[1].x);
+                controlDot.setAttribute('cy', targets.dots[1].y);
+            } else {
+                animateCursor(cursorLine, [donorDot, controlDot], targets, readout, insight, motion);
+            }
+            selectedLoop = loop;
         }
 
         buttons.forEach((button) => {
             button.addEventListener('click', () => selectLoop(Number(button.dataset.evidenceLoop), true));
         });
-
+        wireArrowKeys(buttons, selectLoop, 'evidenceLoop');
         selectLoop(16, false);
     }
 
@@ -426,6 +547,12 @@
             console.warn('Huginn evidence interactions unavailable:', error);
         }
     }
+
+    reducedMotion.addEventListener?.('change', (event) => {
+        if (!event.matches) return;
+        motionStates.forEach(settleMotion);
+        document.querySelectorAll('.evidence-figure').forEach(cancelElementAnimations);
+    });
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init, { once: true });
