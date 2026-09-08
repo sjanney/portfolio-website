@@ -35,6 +35,15 @@ test.describe('Site polish', () => {
     }
   });
 
+  test('dynamic Huginn controls stay free of decorative glyphs', async ({ page }) => {
+    await page.goto('/dev-huginn.html');
+    await waitForPolish(page);
+    const next = page.locator('#model-next');
+    await expect(next).toBeEnabled();
+    await next.click();
+    await expect.poll(() => next.innerText()).not.toMatch(/[←↑→↓↖↗↘↙↻]/);
+  });
+
   for (const width of [320, 390, 768]) {
     test(`Mobile layouts stay inside the viewport at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
