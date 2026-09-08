@@ -1,14 +1,18 @@
 const { test, expect } = require('@playwright/test');
 
-const primaryPages = [
+const sitePages = [
   '/index.html',
   '/bio.html',
   '/work.html',
+  '/work-detail.html',
   '/contact.html',
   '/projects.html',
   '/dev-work.html',
   '/dev-huginn.html',
   '/dev-learned-indexes.html',
+  '/construction.html',
+  '/success.html',
+  '/404.html',
 ];
 
 async function waitForPolish(page) {
@@ -22,8 +26,8 @@ test.describe('Site polish', () => {
     await page.addInitScript(() => localStorage.setItem('permissionsPrompted', 'false'));
   });
 
-  test('rendered primary pages contain no emoji or decorative arrow glyphs', async ({ page }) => {
-    for (const path of primaryPages) {
+  test('rendered site pages contain no emoji or decorative arrow glyphs', async ({ page }) => {
+    for (const path of sitePages) {
       await page.goto(path);
       await waitForPolish(page);
       const text = await page.locator('body').innerText();
@@ -34,7 +38,7 @@ test.describe('Site polish', () => {
   for (const width of [320, 390, 768]) {
     test(`Mobile layouts stay inside the viewport at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
-      for (const path of primaryPages) {
+      for (const path of sitePages) {
         await page.goto(path);
         await waitForPolish(page);
         const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
