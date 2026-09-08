@@ -81,8 +81,8 @@ test.describe('Huginn research article', () => {
     await page.goto('/dev-work.html');
     await expect(page.locator('a[href="dev-learned-indexes.html"]')).toBeVisible();
     await page.locator('a[href="dev-huginn.html"]').click();
-    await expect(page).toHaveTitle('Looking Inside a Language Model, One Loop at a Time — Shane Janney');
-    await expect(page.locator('h1')).toContainText('Looking Inside a Language Model');
+    await expect(page).toHaveTitle('Probing Recurrent Reasoning: Inside Huginn’s Hidden States — Shane Janney');
+    await expect(page.locator('h1')).toContainText('Probing Recurrent Reasoning');
     await expect(page.locator('.dev-article-meta')).toContainText('Shane Janney');
     await expect(page.locator('body')).not.toContainText(/working paper/i);
     await expect(page.locator('body')).not.toContainText('Running it locally');
