@@ -14,19 +14,25 @@
         document.head.appendChild(link);
     }
 
+    function appendScript(src, dataAttribute) {
+        if (document.querySelector(`script[${dataAttribute}]`)) return;
+        const script = document.createElement('script');
+        script.src = src;
+        script.setAttribute(dataAttribute, 'true');
+        document.body.appendChild(script);
+    }
+
     function loadResponsiveStyles() {
         appendStylesheet('assets/css/mobile-polish.css', 'data-site-polish');
         appendStylesheet('assets/css/mobile-polish-fixes.css', 'data-site-polish-fixes');
     }
 
-    function loadHuginnEvidence() {
+    function loadHuginnResearch() {
         if (!document.body.classList.contains('huginn-page')) return;
+        appendStylesheet('assets/css/huginn-architecture.css', 'data-huginn-architecture-style');
         appendStylesheet('assets/css/huginn-evidence.css', 'data-huginn-evidence-style');
-        if (document.querySelector('script[data-huginn-evidence]')) return;
-        const script = document.createElement('script');
-        script.src = 'assets/js/huginn-evidence.js';
-        script.setAttribute('data-huginn-evidence', 'true');
-        document.body.appendChild(script);
+        appendScript('assets/js/huginn-architecture.js', 'data-huginn-architecture');
+        appendScript('assets/js/huginn-evidence.js', 'data-huginn-evidence');
     }
 
     function cleanText(value) {
@@ -75,7 +81,7 @@
     function init() {
         loadResponsiveStyles();
         stripEmojiAndDecorativeArrows();
-        loadHuginnEvidence();
+        loadHuginnResearch();
     }
 
     if (document.readyState === 'loading') {
