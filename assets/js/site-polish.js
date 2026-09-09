@@ -4,6 +4,7 @@
     const skippedTags = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'TEXTAREA']);
     const emojiPattern = /\p{Extended_Pictographic}/gu;
     const decorativeArrowPattern = /[←↑→↓↖↗↘↙↻]/g;
+    const visibleDashPattern = /[-‐‑‒–—―]/g;
 
     function appendStylesheet(href, dataAttribute) {
         if (document.querySelector(`link[${dataAttribute}]`)) return;
@@ -39,6 +40,9 @@
         return value
             .replace(emojiPattern, '')
             .replace(decorativeArrowPattern, '')
+            .replace(/(^|[\s([{:;,=])-(?=\d(?:\.\d)?)/g, '$1−')
+            .replace(/([a-z])-(?=\d)/g, '$1−')
+            .replace(visibleDashPattern, ' ')
             .replace(/ {2,}/g, ' ');
     }
 
@@ -59,7 +63,7 @@
         while (walker.nextNode()) sanitizeTextNode(walker.currentNode);
     }
 
-    function stripEmojiAndDecorativeArrows() {
+    function stripDecorativeGlyphsAndDashes() {
         sanitizeTree(document.body);
         const cycle = document.querySelector('.model-cycle');
         if (cycle) cycle.textContent = 'loop';
@@ -80,7 +84,7 @@
 
     function init() {
         loadResponsiveStyles();
-        stripEmojiAndDecorativeArrows();
+        stripDecorativeGlyphsAndDashes();
         loadHuginnResearch();
     }
 
