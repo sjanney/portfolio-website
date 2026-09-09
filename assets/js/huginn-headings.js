@@ -9,31 +9,31 @@
     function setSectionHeadings() {
         const backgroundHeadings = document.querySelectorAll('#background > h2');
         const background = [
-            'What I actually wanted to know',
-            'A good probe can still fool you',
-            'Huginn gives me a clean compute dial',
+            'The monitoring question',
+            'Why probe accuracy is not enough',
+            'Recurrence as a controlled compute intervention',
         ];
         backgroundHeadings.forEach((heading, index) => {
             if (background[index] && heading.textContent !== background[index]) heading.textContent = background[index];
         });
 
-        setText('#frontier-context > h2', 'Why this question matters more now');
-        setText('#why-huginn > h2', 'Why Huginn was the right testbed');
-        setText('#method > h2', 'I needed ground truth inside the task');
-        setText('#trajectory > h2', 'The interesting part is when the signal appears');
-        setText('#monitors > h2', 'Then the simple story falls apart');
-        setText('#patching > h2', 'So I tried to make the signal matter');
-        setText('#limits > h2', 'The null result changed what I think this means');
-        setText('#resources > h2', 'Everything behind the result');
+        setText('#frontier-context > h2', 'Why this matters for current model monitoring');
+        setText('#why-huginn > h2', 'Why Huginn is a useful testbed');
+        setText('#method > h2', 'Designing a task with known latent structure');
+        setText('#trajectory > h2', 'When linear decodability emerges');
+        setText('#monitors > h2', 'Comparing state and rationale observability');
+        setText('#patching > h2', 'Testing whether the decoded signal is causally used');
+        setText('#limits > h2', 'What the current result does and does not show');
+        setText('#resources > h2', 'Materials and reproducibility');
 
         const contents = new Map([
-            ['#background', 'What I wanted to know'],
-            ['#frontier-context', 'Why this matters now'],
-            ['#method', 'How I tested it'],
-            ['#trajectory', 'Where the signal appears'],
-            ['#patching', 'Does the signal matter?'],
-            ['#limits', 'What I still do not know'],
-            ['#resources', 'Audit the work'],
+            ['#background', 'Monitoring question'],
+            ['#frontier-context', 'Current context'],
+            ['#method', 'Experimental design'],
+            ['#trajectory', 'Decodability'],
+            ['#patching', 'Causal test'],
+            ['#limits', 'Interpretation'],
+            ['#resources', 'Materials'],
         ]);
         document.querySelectorAll('.article-contents a[href]').forEach((link) => {
             const replacement = contents.get(link.getAttribute('href'));
@@ -42,33 +42,33 @@
     }
 
     function setStaticFigureHeadings() {
-        setText('#walkthrough-title', 'What changes on each recurrent pass');
-        setText('#openai-monitorability-title', 'Longer reasoning gives monitors more to inspect');
-        setText('#openai-control-title', 'Astra can steer its written reasoning much more');
-        setText('#method .figure-heading h3', 'A tiny version of the task');
-        setText('#trajectory .figure-heading h3', 'When the hidden state starts giving the label away');
-        setText('#monitors > figure .figure-heading h3', 'The state is readable even when the answer is not');
-        setText('#patching > figure .figure-heading h3', 'What happens when I swap the state');
+        setText('#walkthrough-title', 'Recurrent computation through one token position');
+        setText('#openai-monitorability-title', 'Monitorability as reasoning length changes');
+        setText('#openai-control-title', 'Chain of thought controllability at matched lengths');
+        setText('#method .figure-heading h3', 'A simplified version of the policy task');
+        setText('#trajectory .figure-heading h3', 'Path label decodability across recurrence');
+        setText('#monitors > figure .figure-heading h3', 'State, rationale, and task accuracy at the same depth');
+        setText('#patching > figure .figure-heading h3', 'Counterfactual state patching by loop');
 
         const methodSummary = document.querySelector('#method details summary');
-        if (methodSummary && methodSummary.textContent !== 'Why I kept the data split strict') {
-            methodSummary.textContent = 'Why I kept the data split strict';
+        if (methodSummary && methodSummary.textContent !== 'Why the data split matters') {
+            methodSummary.textContent = 'Why the data split matters';
         }
     }
 
     function setDynamicFigureHeadings() {
-        setText('#architecture-explorer-title', 'What changes with another recurrent pass');
-        setText('#signal-example-title', 'Where the state pulls away from the written rationale');
-        setText('#causal-example-title', 'Did swapping the state actually move the answer?');
+        setText('#architecture-explorer-title', 'How recurrent computation changes with depth');
+        setText('#signal-example-title', 'Where state and rationale observability diverge');
+        setText('#causal-example-title', 'What changes under counterfactual state patching');
 
         const depthHeading = document.querySelector('.architecture-depth-heading strong');
-        if (depthHeading && depthHeading.textContent !== 'What I change when I turn recurrence up') {
-            depthHeading.textContent = 'What I change when I turn recurrence up';
+        if (depthHeading && depthHeading.textContent !== 'Changing recurrence depth without changing the model') {
+            depthHeading.textContent = 'Changing recurrence depth without changing the model';
         }
 
         const experimentLabel = document.querySelector('.architecture-experiment-note > span');
-        if (experimentLabel && experimentLabel.textContent !== 'Why I care about this control') {
-            experimentLabel.textContent = 'Why I care about this control';
+        if (experimentLabel && experimentLabel.textContent !== 'Why this control matters') {
+            experimentLabel.textContent = 'Why this control matters';
         }
     }
 
