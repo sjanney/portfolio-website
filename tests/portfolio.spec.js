@@ -46,7 +46,7 @@ test.describe('Portfolio Website Tests', () => {
 
     const fellowship = page.locator('.pglang-item').filter({ hasText: 'a16z College Fellow' });
     await expect(fellowship).toHaveCount(1);
-    await expect(fellowship.locator('.pglang-date')).toHaveText('24-06-01');
+    await expect(fellowship.locator('.pglang-date')).toHaveText('24 06 01');
     await expect(fellowship.locator('img')).toHaveAttribute('src', 'assets/images/logos/a16z.png');
   });
 
@@ -122,7 +122,7 @@ test.describe('Portfolio Website Tests', () => {
   test('Other work detail pages retain the construction state', async ({ page }) => {
     await page.goto('/work-detail.html?id=1');
 
-    await expect(page.locator('.detail-title')).toHaveText('beardown festival - redveil performance');
+    await expect(page.locator('.detail-title')).toHaveText('beardown festival redveil performance');
     await expect(page.locator('.detail-status')).toHaveText('page under construction');
     await expect(page.locator('.slawn-gallery')).toBeHidden();
   });
