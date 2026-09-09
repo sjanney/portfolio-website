@@ -26,12 +26,14 @@ test.describe('Site polish', () => {
     await page.addInitScript(() => localStorage.setItem('permissionsPrompted', 'false'));
   });
 
-  test('rendered site pages contain no emoji, decorative arrows, or dash punctuation', async ({ page }) => {
+  test('rendered site pages and titles contain no emoji, decorative arrows, or dash punctuation', async ({ page }) => {
     for (const path of sitePages) {
       await page.goto(path);
       await waitForPolish(page);
       const text = await page.locator('body').innerText();
+      const title = await page.title();
       expect(text, path).not.toMatch(/[\p{Extended_Pictographic}←↑→↓↖↗↘↙↻\-‐‑‒–—―]/u);
+      expect(title, `${path} title`).not.toMatch(/[-‐‑‒–—―]/);
     }
   });
 
