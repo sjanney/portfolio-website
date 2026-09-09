@@ -6,7 +6,7 @@ test.describe('Portfolio Website Tests', () => {
     await page.goto('/');
     
     // Check title
-    await expect(page).toHaveTitle('Shane Janney — Portfolio');
+    await expect(page).toHaveTitle('Shane Janney Portfolio');
     
     // Check nav exists and bio is present
     const bioLink = page.locator('.nav-link', { hasText: 'bio' });
@@ -34,7 +34,7 @@ test.describe('Portfolio Website Tests', () => {
     
     // Wait for navigation
     await expect(page).toHaveURL(/.*work\.html/);
-    await expect(page).toHaveTitle('Shane Janney — Creative Work');
+    await expect(page).toHaveTitle('Shane Janney Creative Work');
     
     // Check that there are multiple scroll sections
     const sections = page.locator('.work-section');
