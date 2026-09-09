@@ -64,6 +64,7 @@
     }
 
     function stripDecorativeGlyphsAndDashes() {
+        document.title = cleanText(document.title);
         sanitizeTree(document.body);
         const cycle = document.querySelector('.model-cycle');
         if (cycle) cycle.textContent = 'loop';
