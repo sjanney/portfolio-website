@@ -34,6 +34,7 @@
         appendStylesheet('assets/css/huginn-evidence.css', 'data-huginn-evidence-style');
         appendScript('assets/js/huginn-architecture.js', 'data-huginn-architecture');
         appendScript('assets/js/huginn-evidence.js', 'data-huginn-evidence');
+        appendScript('assets/js/huginn-headings.js', 'data-huginn-headings');
     }
 
     function cleanText(value) {
