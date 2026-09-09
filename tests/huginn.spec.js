@@ -9,7 +9,7 @@ test.describe('Huginn research article', () => {
     await expect(figure).toBeVisible();
     await expect(page.locator('.model-walkthrough')).toHaveCount(0);
     await expect(figure).toContainText('same parameters every loop');
-    await expect(figure).toContainText('hk = Gθ(hk-1, e)');
+    await expect(figure).toContainText('hk = Gθ(hk−1, e)');
     await expect(figure.locator('[data-architecture-stage="0"]')).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('#architecture-stage-index')).toHaveText('01 / 09');
 
