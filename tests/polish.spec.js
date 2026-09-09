@@ -26,16 +26,16 @@ test.describe('Site polish', () => {
     await page.addInitScript(() => localStorage.setItem('permissionsPrompted', 'false'));
   });
 
-  test('rendered site pages contain no emoji or decorative arrow glyphs', async ({ page }) => {
+  test('rendered site pages contain no emoji, decorative arrows, or dash punctuation', async ({ page }) => {
     for (const path of sitePages) {
       await page.goto(path);
       await waitForPolish(page);
       const text = await page.locator('body').innerText();
-      expect(text, path).not.toMatch(/[\p{Extended_Pictographic}←↑→↓↖↗↘↙↻]/u);
+      expect(text, path).not.toMatch(/[\p{Extended_Pictographic}←↑→↓↖↗↘↙↻\-‐‑‒–—―]/u);
     }
   });
 
-  test('dynamic Huginn architecture controls stay free of decorative glyphs', async ({ page }) => {
+  test('dynamic Huginn architecture controls stay free of decorative glyphs and dashes', async ({ page }) => {
     await page.goto('/dev-huginn.html');
     await waitForPolish(page);
     const explorer = page.locator('#architecture-explorer');
@@ -43,7 +43,7 @@ test.describe('Site polish', () => {
     await explorer.locator('[data-architecture-stage="3"]').click();
     await explorer.locator('[data-architecture-depth="32"]').click();
     const text = await explorer.innerText();
-    expect(text).not.toMatch(/[←↑→↓↖↗↘↙↻]/);
+    expect(text).not.toMatch(/[←↑→↓↖↗↘↙↻\-‐‑‒–—―]/);
   });
 
   for (const width of [320, 390, 768]) {
@@ -58,7 +58,7 @@ test.describe('Site polish', () => {
     });
   }
 
-  test('Huginn gets the architecture explorer and two data-backed evidence interactions', async ({ page }) => {
+  test('Huginn gets the architecture explorer and two data backed evidence interactions', async ({ page }) => {
     await page.goto('/dev-huginn.html');
     await waitForPolish(page);
 
@@ -73,7 +73,7 @@ test.describe('Site polish', () => {
     await expect(architecture.locator('[data-architecture-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
     await expect(architecture).toContainText('The architecture and weights stay the same');
 
-    await expect(signal).toContainText('paired held-out measurements');
+    await expect(signal).toContainText('paired held out measurements');
     await expect(signal).not.toContainText('conceptual animation');
     await expect(signal.locator('[data-evidence-depth="16"]')).toHaveAttribute('aria-pressed', 'true');
     await expect(signal.locator('[data-readout="state"]')).toHaveText('91.9%');
@@ -88,7 +88,7 @@ test.describe('Site polish', () => {
     await expect(causal).toContainText('measured patching effects');
     await expect(causal.locator('[data-evidence-loop="16"]')).toHaveAttribute('aria-pressed', 'true');
     await expect(causal.locator('[data-patch-readout="counterfactual"]')).toHaveText('+0.0020');
-    await expect(causal.locator('[data-patch-readout="control"]')).toHaveText('-0.0082');
+    await expect(causal.locator('[data-patch-readout="control"]')).toHaveText('−0.0082');
 
     await causal.locator('[data-evidence-loop="32"]').click();
     await expect(causal.locator('[data-patch-readout="counterfactual"]')).toHaveText('+0.0176');
